@@ -3,7 +3,7 @@
 
 [package]
 name = "gfxd-sys"
-edition = "2024"
+edition = "2018"
 version.workspace = true
 authors.workspace = true
 repository.workspace = true
@@ -19,14 +19,14 @@ build = "build.rs"
 # cargo install cargo-msrv --locked --force
 # cargo msrv find -- cargo check -p gfxd-sys
 # ```
-# rust-version = "1.82.0"
+rust-version = "1.64.0"
 
 [lib]
 path = "src/lib.rs"
 
 [features]
-# default = []
-# std = []
+default = []
+std = []
 
 [dependencies]
 

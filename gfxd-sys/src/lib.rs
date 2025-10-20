@@ -1,14 +1,19 @@
-pub fn add(left: u64, right: u64) -> u64 {
-    left + right
-}
+/* SPDX-FileCopyrightText: © 2025 Decompollaborate */
+/* SPDX-License-Identifier: MIT */
 
-#[cfg(test)]
-mod tests {
-    use super::*;
+#![doc = include_str!("../README.md")]
+#![cfg_attr(not(feature = "std"), no_std)]
 
-    #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
-    }
-}
+#![allow(non_camel_case_types)]
+#![allow(non_upper_case_globals)]
+
+pub mod io;
+pub mod handlers;
+pub mod argument_callbacks;
+pub mod settings;
+pub mod execution;
+pub mod macro_info;
+pub mod custom_output;
+pub mod config;
+pub mod macro_id;
+pub mod arg_type;
