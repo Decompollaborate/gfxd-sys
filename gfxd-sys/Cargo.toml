@@ -29,3 +29,6 @@ path = "src/lib.rs"
 # std = []
 
 [dependencies]
+
+[build-dependencies]
+cc = "1"
