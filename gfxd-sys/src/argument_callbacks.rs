@@ -11,6 +11,8 @@
 //! `gfxd_arg_dflt` will output the argument value after the callback
 //! function's output.
 
+use core::ffi;
+
 extern "C" {
     /// Examines the argument with index `arg_num` and executes the callback
     /// function for that argument type, if such a callback is supported and
@@ -27,21 +29,101 @@ extern "C" {
     /// available in the current macro, the value for that parameter is
     /// substituted with `-1` for signed parameters, and zero for unsigned
     /// parameters.
-    pub fn gfxd_arg_callbacks(arg_num: ::core::ffi::c_int) -> ::core::ffi::c_int;
-}
+    pub fn gfxd_arg_callbacks(arg_num: ffi::c_int) -> ffi::c_int;
 
-pub type gfxd_tlut_fn_t = ::core::option::Option<
-    unsafe extern "C" fn(tlut: u32, idx: i32, count: i32) -> ::core::ffi::c_int,
->;
-extern "C" {
     /// Set the callback function for palette arguments.
     ///
     /// The argument type is `gfxd_Tlut`.
     /// The palette index is in `idx` and the number of colors in `count`.
     pub fn gfxd_tlut_callback(fn_: gfxd_tlut_fn_t);
+
+    /// Set the callback function for texture arguments.
+    ///
+    /// The argument type is `gfxd_Timg`.
+    /// The image format is in `fmt` and `siz`, the dimensions in `width` and
+    /// `height`, and the palette index in `pal`.
+    pub fn gfxd_timg_callback(fn_: gfxd_timg_fn_t);
+
+    /// Set the callback function for frame buffer arguments.
+    ///
+    /// The argument type is `gfxd_Cimg`.
+    /// The image format is in `fmt` and `siz`, and the horizontal resolution in `width`.
+    pub fn gfxd_cimg_callback(fn_: gfxd_cimg_fn_t);
+
+    /// Set the callback function for depth buffer arguments.
+    ///
+    /// The argument type is `gfxd_Zimg`.
+    pub fn gfxd_zimg_callback(fn_: gfxd_zimg_fn_t);
+
+    /// Set the callback function for display list arguments.
+    ///
+    /// The argument type is `gfxd_Dl`.
+    pub fn gfxd_dl_callback(fn_: gfxd_dl_fn_t);
+
+    /// Set the callback function for matrix arguments.
+    ///
+    /// The argument type is `gfxd_Mtxptr`.
+    pub fn gfxd_mtx_callback(fn_: gfxd_mtx_fn_t);
+
+    /// Set the callback function for lookat array arguments.
+    ///
+    /// The argument type is `gfxd_Lookatptr`.
+    /// The number of lookat structures (1 or 2) is in `count`.
+    pub fn gfxd_lookat_callback(fn_: gfxd_lookat_fn_t);
+
+    /// Set the callback function for diffuse (`Light *`) or ambient (`Ambient *`) light arguments.
+    ///
+    /// The argument type is `gfxd_Lightptr`.
+    pub fn gfxd_light_callback(fn_: gfxd_light_fn_t);
+
+    /// Set the callback function for Lights_M_ arguments.
+    ///
+    /// The argument type is `gfxd_Lightsn`.
+    /// The number of diffuse lights used is in `num`.
+    pub fn gfxd_lightsn_callback(fn_: gfxd_lightsn_fn_t);
+
+    /// Set the callback function for segment base arguments.
+    ///
+    /// The argument type is `gfxd_Segptr`.
+    /// The segment number is in `num`.
+    pub fn gfxd_seg_callback(fn_: gfxd_seg_fn_t);
+
+    /// Set the callback function for vertex array arguments.
+    ///
+    /// The argument type is `gfxd_Vtxptr`.
+    /// The number of vertex structures is in `num`.
+    pub fn gfxd_vtx_callback(fn_: gfxd_vtx_fn_t);
+
+    /// Set the callback function for viewport arguments.
+    ///
+    /// The argument type is `gfxd_Vp`.
+    pub fn gfxd_vp_callback(fn_: gfxd_vp_fn_t);
+
+    /// Set the callback function for microcode text arguments.
+    ///
+    /// The argument type is `gfxd_Uctext`.
+    /// The size of the text segment is in `size`.
+    pub fn gfxd_uctext_callback(fn_: gfxd_uctext_fn_t);
+
+    /// Set the callback function for microcode data arguments.
+    ///
+    /// The argument type is `gfxd_Ucdata`.
+    /// The size of the data segment is in `size`.
+    pub fn gfxd_ucdata_callback(fn_: gfxd_ucdata_fn_t);
+
+    /// Set the callback function for generic pointer arguments.
+    ///
+    /// The argument type is `gfxd_Dram`.
+    /// The size of the data is in `size`.
+    pub fn gfxd_dram_callback(fn_: gfxd_dram_fn_t);
 }
 
-pub type gfxd_timg_fn_t = ::core::option::Option<
+
+pub type gfxd_tlut_fn_t = Option<
+    unsafe extern "C" fn(tlut: u32, idx: i32, count: i32) -> ffi::c_int,
+>;
+
+pub type gfxd_timg_fn_t = Option<
     unsafe extern "C" fn(
         timg: u32,
         fmt: i32,
@@ -49,143 +131,43 @@ pub type gfxd_timg_fn_t = ::core::option::Option<
         width: i32,
         height: i32,
         pal: i32,
-    ) -> ::core::ffi::c_int,
+    ) -> ffi::c_int,
 >;
-extern "C" {
-    /// Set the callback function for texture arguments.
-    ///
-    /// The argument type is `gfxd_Timg`.
-    /// The image format is in `fmt` and `siz`, the dimensions in `width` and
-    /// `height`, and the palette index in `pal`.
-    pub fn gfxd_timg_callback(fn_: gfxd_timg_fn_t);
-}
 
-
-pub type gfxd_cimg_fn_t = ::core::option::Option<
-    unsafe extern "C" fn(cimg: u32, fmt: i32, siz: i32, width: i32) -> ::core::ffi::c_int,
+pub type gfxd_cimg_fn_t = Option<
+    unsafe extern "C" fn(cimg: u32, fmt: i32, siz: i32, width: i32) -> ffi::c_int,
 >;
-extern "C" {
-    /// Set the callback function for frame buffer arguments.
-    ///
-    /// The argument type is `gfxd_Cimg`.
-    /// The image format is in `fmt` and `siz`, and the horizontal resolution in `width`.
-    pub fn gfxd_cimg_callback(fn_: gfxd_cimg_fn_t);
-}
-
 
 pub type gfxd_zimg_fn_t =
-    ::core::option::Option<unsafe extern "C" fn(zimg: u32) -> ::core::ffi::c_int>;
-extern "C" {
-    /// Set the callback function for depth buffer arguments.
-    ///
-    /// The argument type is `gfxd_Zimg`.
-    pub fn gfxd_zimg_callback(fn_: gfxd_zimg_fn_t);
-}
+    Option<unsafe extern "C" fn(zimg: u32) -> ffi::c_int>;
 
-
-pub type gfxd_dl_fn_t = ::core::option::Option<unsafe extern "C" fn(dl: u32) -> ::core::ffi::c_int>;
-extern "C" {
-    /// Set the callback function for display list arguments.
-    ///
-    /// The argument type is `gfxd_Dl`.
-    pub fn gfxd_dl_callback(fn_: gfxd_dl_fn_t);
-}
-
+pub type gfxd_dl_fn_t = Option<unsafe extern "C" fn(dl: u32) -> ffi::c_int>;
 
 pub type gfxd_mtx_fn_t =
-    ::core::option::Option<unsafe extern "C" fn(mtx: u32) -> ::core::ffi::c_int>;
-extern "C" {
-    /// Set the callback function for matrix arguments.
-    ///
-    /// The argument type is `gfxd_Mtxptr`.
-    pub fn gfxd_mtx_callback(fn_: gfxd_mtx_fn_t);
-}
-
+    Option<unsafe extern "C" fn(mtx: u32) -> ffi::c_int>;
 
 pub type gfxd_lookat_fn_t =
-    ::core::option::Option<unsafe extern "C" fn(lookat: u32, count: i32) -> ::core::ffi::c_int>;
-extern "C" {
-    /// Set the callback function for lookat array arguments.
-    ///
-    /// The argument type is `gfxd_Lookatptr`.
-    /// The number of lookat structures (1 or 2) is in `count`.
-    pub fn gfxd_lookat_callback(fn_: gfxd_lookat_fn_t);
-}
+        Option<unsafe extern "C" fn(lookat: u32, count: i32) -> ffi::c_int>;
 
 pub type gfxd_light_fn_t =
-    ::core::option::Option<unsafe extern "C" fn(light: u32) -> ::core::ffi::c_int>;
-extern "C" {
-    /// Set the callback function for diffuse (`Light *`) or ambient (`Ambient *`) light arguments.
-    ///
-    /// The argument type is `gfxd_Lightptr`.
-    pub fn gfxd_light_callback(fn_: gfxd_light_fn_t);
-}
-
+    Option<unsafe extern "C" fn(light: u32) -> ffi::c_int>;
 
 pub type gfxd_lightsn_fn_t =
-    ::core::option::Option<unsafe extern "C" fn(lightsn: u32, num: i32) -> ::core::ffi::c_int>;
-extern "C" {
-    /// Set the callback function for Lights_M_ arguments.
-    ///
-    /// The argument type is `gfxd_Lightsn`.
-    /// The number of diffuse lights used is in `num`.
-    pub fn gfxd_lightsn_callback(fn_: gfxd_lightsn_fn_t);
-}
+    Option<unsafe extern "C" fn(lightsn: u32, num: i32) -> ffi::c_int>;
 
 pub type gfxd_seg_fn_t =
-    ::core::option::Option<unsafe extern "C" fn(seg: u32, num: i32) -> ::core::ffi::c_int>;
-extern "C" {
-    /// Set the callback function for segment base arguments.
-    ///
-    /// The argument type is `gfxd_Segptr`.
-    /// The segment number is in `num`.
-    pub fn gfxd_seg_callback(fn_: gfxd_seg_fn_t);
-}
+    Option<unsafe extern "C" fn(seg: u32, num: i32) -> ffi::c_int>;
 
 pub type gfxd_vtx_fn_t =
-    ::core::option::Option<unsafe extern "C" fn(vtx: u32, num: i32) -> ::core::ffi::c_int>;
-extern "C" {
-    /// Set the callback function for vertex array arguments.
-    ///
-    /// The argument type is `gfxd_Vtxptr`.
-    /// The number of vertex structures is in `num`.
-    pub fn gfxd_vtx_callback(fn_: gfxd_vtx_fn_t);
-}
+    Option<unsafe extern "C" fn(vtx: u32, num: i32) -> ffi::c_int>;
 
-pub type gfxd_vp_fn_t = ::core::option::Option<unsafe extern "C" fn(vp: u32) -> ::core::ffi::c_int>;
-extern "C" {
-    /// Set the callback function for viewport arguments.
-    ///
-    /// The argument type is `gfxd_Vp`.
-    pub fn gfxd_vp_callback(fn_: gfxd_vp_fn_t);
-}
+pub type gfxd_vp_fn_t = Option<unsafe extern "C" fn(vp: u32) -> ffi::c_int>;
 
 pub type gfxd_uctext_fn_t =
-    ::core::option::Option<unsafe extern "C" fn(text: u32, size: u32) -> ::core::ffi::c_int>;
-extern "C" {
-    /// Set the callback function for microcode text arguments.
-    ///
-    /// The argument type is `gfxd_Uctext`.
-    /// The size of the text segment is in `size`.
-    pub fn gfxd_uctext_callback(fn_: gfxd_uctext_fn_t);
-}
+    Option<unsafe extern "C" fn(text: u32, size: u32) -> ffi::c_int>;
 
 pub type gfxd_ucdata_fn_t =
-    ::core::option::Option<unsafe extern "C" fn(data: u32, size: u32) -> ::core::ffi::c_int>;
-extern "C" {
-    /// Set the callback function for microcode data arguments.
-    ///
-    /// The argument type is `gfxd_Ucdata`.
-    /// The size of the data segment is in `size`.
-    pub fn gfxd_ucdata_callback(fn_: gfxd_ucdata_fn_t);
-}
+    Option<unsafe extern "C" fn(data: u32, size: u32) -> ffi::c_int>;
 
 pub type gfxd_dram_fn_t =
-    ::core::option::Option<unsafe extern "C" fn(dram: u32, size: u32) -> ::core::ffi::c_int>;
-extern "C" {
-    /// Set the callback function for generic pointer arguments.
-    ///
-    /// The argument type is `gfxd_Dram`.
-    /// The size of the data is in `size`.
-    pub fn gfxd_dram_callback(fn_: gfxd_dram_fn_t);
-}
+    Option<unsafe extern "C" fn(dram: u32, size: u32) -> ffi::c_int>;

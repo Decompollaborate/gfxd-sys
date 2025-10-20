@@ -7,6 +7,8 @@
 //! functions will want to do some output of their own. The following methods
 //! are available for inserting custom text into the gfxd output.
 
+use core::ffi;
+
 use crate::macro_info::gfxd_value_t;
 
 extern "C" {
@@ -14,14 +16,14 @@ extern "C" {
     ///
     /// The number of characters written is returned.
     pub fn gfxd_write(
-        buf: *const ::core::ffi::c_void,
-        count: ::core::ffi::c_int,
-    ) -> ::core::ffi::c_int;
+        buf: *const ffi::c_void,
+        count: ffi::c_int,
+    ) -> ffi::c_int;
 
     /// Insert the null-terminated string at `str` into the output.
     ///
     /// The number of characters written is returned.
-    pub fn gfxd_puts(str_: *const ::core::ffi::c_char) -> ::core::ffi::c_int;
+    pub fn gfxd_puts(str_: *const ffi::c_char) -> ffi::c_int;
 
     /// Insert the printf-formatted string described by `fmt` and additional arguments
     /// into the output.
@@ -29,10 +31,10 @@ extern "C" {
     /// Limited to 255 characters.
     ///
     /// The number of characters written is returned.
-    pub fn gfxd_printf(fmt: *const ::core::ffi::c_char, ...) -> ::core::ffi::c_int;
+    pub fn gfxd_printf(fmt: *const ffi::c_char, ...) -> ffi::c_int;
 
     // Rust currently has no way to represent a C `va_list`.
-    // pub fn gfxd_vprintf( fmt: *const ::core::ffi::c_char, arg: *mut __va_list_tag) -> ::core::ffi::c_int;
+    // pub fn gfxd_vprintf( fmt: *const ffi::c_char, arg: *mut __va_list_tag) -> ffi::c_int;
 
     /// Insert the type-formatted value into the output.
     ///
@@ -43,7 +45,7 @@ extern "C" {
     /// The macro argument with index `n` can be printed with
     /// `gfxd_print_value(gfxd_arg_type(n), gfxd_arg_value(n))`.
     pub fn gfxd_print_value(
-        type_: ::core::ffi::c_int,
+        type_: ffi::c_int,
         value: *const gfxd_value_t,
-    ) -> ::core::ffi::c_int;
+    ) -> ffi::c_int;
 }

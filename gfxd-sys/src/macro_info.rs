@@ -9,14 +9,16 @@
 //! They should only be used in custom handlers and callbacks from within
 //! `gfxd_execute`. If used elsewhere, their behavior is undefined.
 
+use core::ffi;
+
 extern "C" {
     /// Returns the offset in the input data of the current macro.
     ///
     /// The offset starts at zero when `gfxd_execute` is called.
-    pub fn gfxd_macro_offset() -> ::core::ffi::c_int;
+    pub fn gfxd_macro_offset() -> ffi::c_int;
 
     /// Returns the number of `Gfx` packets within the current macro.
-    pub fn gfxd_macro_packets() -> ::core::ffi::c_int;
+    pub fn gfxd_macro_packets() -> ffi::c_int;
 
     /// Run `fn` for each individual sub-packet the current macro is made up
     /// of.
@@ -33,20 +35,20 @@ extern "C" {
     ///
     /// If `fn` is null no processing is done and 0 is returned.
     pub fn gfxd_foreach_pkt(
-        fn_: ::core::option::Option<unsafe extern "C" fn() -> ::core::ffi::c_int>,
-    ) -> ::core::ffi::c_int;
+        fn_: Option<unsafe extern "C" fn() -> ffi::c_int>,
+    ) -> ffi::c_int;
 
     /// Returns a pointer to the input data for the current macro.
     ///
     /// The data is not byte-swapped.
     ///
     /// The data has a length of `sizeof(Gfx) * gfxd_macro_packets()`.
-    pub fn gfxd_macro_data() -> *const ::core::ffi::c_void;
+    pub fn gfxd_macro_data() -> *const ffi::c_void;
 
     /// Returns a number that uniquely identifies the current macro.
     ///
     /// The number will be one of the constants in `gfxd.h`.
-    pub fn gfxd_macro_id() -> ::core::ffi::c_int;
+    pub fn gfxd_macro_id() -> ffi::c_int;
 
     /// Returns the name of the current macro.
     ///
@@ -56,26 +58,26 @@ extern "C" {
     /// version is returned. Otherwise the static `gs` version is returned.
     ///
     /// The returned pointer is invalidated by a subsequent call to `gfxd_macro_name`.
-    pub fn gfxd_macro_name() -> *const ::core::ffi::c_char;
+    pub fn gfxd_macro_name() -> *const ffi::c_char;
 
     /// Returns the number of arguments to the current macro.
     ///
     /// Does not include a dynamic display list pointer if one has been
     /// specified.
-    pub fn gfxd_arg_count() -> ::core::ffi::c_int;
+    pub fn gfxd_arg_count() -> ffi::c_int;
 
     /// Returns a number that identifies the type of the argument with index
     /// `arg_num`.
     ///
     /// The number will be one of the constants in `gfxd.h`.
-    pub fn gfxd_arg_type(arg_num: ::core::ffi::c_int) -> ::core::ffi::c_int;
+    pub fn gfxd_arg_type(arg_num: ffi::c_int) -> ffi::c_int;
 
     /// Returns the name of the argument with index `arg_num`.
     ///
     /// Argument names are not canonical, nor are they needed for macro
     /// disassembly, but they can be useful for informational and diagnostic
     /// purposes.
-    pub fn gfxd_arg_name(arg_num: ::core::ffi::c_int) -> *const ::core::ffi::c_char;
+    pub fn gfxd_arg_name(arg_num: ffi::c_int) -> *const ffi::c_char;
 
     /// Returns the data format of the argument with index `arg_num`.
     ///
@@ -84,12 +86,12 @@ extern "C" {
     ///
     /// When accessing the value of the argument with `gfxd_arg_value`, the
     /// member with the corresponding type should be used.
-    pub fn gfxd_arg_fmt(arg_num: ::core::ffi::c_int) -> ::core::ffi::c_int;
+    pub fn gfxd_arg_fmt(arg_num: ffi::c_int) -> ffi::c_int;
 
     /// Returns a pointer to the value of the argument with index `arg_num`.
     ///
     /// The value is a union of type `gfxd_value_t`
-    pub fn gfxd_arg_value(arg_num: ::core::ffi::c_int) -> *const gfxd_value_t;
+    pub fn gfxd_arg_value(arg_num: ffi::c_int) -> *const gfxd_value_t;
 
     /// Returns a pointer to the value of the argument that is of `type`, and
     /// has order `idx` in all arguments of that type.
@@ -98,8 +100,8 @@ extern "C" {
     ///
     /// If there is no argument with the given type and order, null is returned.
     pub fn gfxd_value_by_type(
-        type_: ::core::ffi::c_int,
-        idx: ::core::ffi::c_int,
+        type_: ffi::c_int,
+        idx: ffi::c_int,
     ) -> *const gfxd_value_t;
 
     /// Returns non-zero if the argument with index `arg_num` is "valid", for
@@ -111,7 +113,7 @@ extern "C" {
     ///
     /// The argument still has a value that can be printed, though the value is
     /// not guaranteed to make any sense.
-    pub fn gfxd_arg_valid(arg_num: ::core::ffi::c_int) -> ::core::ffi::c_int;
+    pub fn gfxd_arg_valid(arg_num: ffi::c_int) -> ffi::c_int;
 }
 
 

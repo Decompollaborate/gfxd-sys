@@ -7,6 +7,8 @@
 //! executing (i.e. after `gfxd_execute` has been entered, and before it returns),
 //! the general settings and the I/O settings should not be changed.
 
+use core::ffi;
+
 extern "C" {
     /// Start executing gfxd with the current settings.
     ///
@@ -24,5 +26,5 @@ extern "C" {
     /// return value from the macro handler is returned.
     ///
     /// Otherwise zero is returned.
-    pub fn gfxd_execute() -> ::core::ffi::c_int;
+    pub fn gfxd_execute() -> ffi::c_int;
 }
