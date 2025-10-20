@@ -1,6 +1,31 @@
+# SPDX-FileCopyrightText: © 2025 Decompollaborate
+# SPDX-License-Identifier: MIT
+
 [package]
 name = "gfxd-sys"
-version = "0.1.0"
 edition = "2024"
+version.workspace = true
+authors.workspace = true
+repository.workspace = true
+# license.workspace = true
+description = "Rust bindings for libgfxd, the N64 display list decompiler library"
+readme = "README.md"
+# keywords = ["MIPS", "decoder"]
+# categories = ["no-std", "no-std::no-alloc"]
+build = "build.rs"
+
+# Use https://github.com/foresterre/cargo-msrv to check the MSRV
+# ```
+# cargo install cargo-msrv --locked --force
+# cargo msrv find -- cargo check -p gfxd-sys
+# ```
+# rust-version = "1.82.0"
+
+[lib]
+path = "src/lib.rs"
+
+[features]
+# default = []
+# std = []
 
 [dependencies]
