@@ -3,7 +3,7 @@
 
 //! These functions control general input and output settings.
 
-use core::ffi;
+use crate::ffi;
 
 use crate::ptr::{NonNullConst, NonNullMut, Opaque};
 

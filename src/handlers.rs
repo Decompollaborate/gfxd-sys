@@ -12,7 +12,7 @@
 //! The new handler can extend the default function by calling
 //! `gfxd_macro_dflt` within it, or it can override it completely.
 
-use core::ffi;
+use crate::ffi;
 
 extern "C" {
     /// The default macro handler.

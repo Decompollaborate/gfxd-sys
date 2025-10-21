@@ -13,7 +13,7 @@
 //! [`gfxd_endian`]: crate::settings::gfxd_endian
 //! [`gfxd_target`]: crate::settings::gfxd_target
 
-use core::ffi;
+use crate::ffi;
 
 use crate::ptr::NonNullConst;
 

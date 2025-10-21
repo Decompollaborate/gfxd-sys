@@ -32,9 +32,9 @@ links = "gfxd"
 # Use https://github.com/foresterre/cargo-msrv to check the MSRV
 # ```
 # cargo install cargo-msrv --locked --force
-# cargo msrv find -- cargo check -p gfxd-sys
+# cargo msrv find
 # ```
-rust-version = "1.64.0"
+rust-version = "1.37.0"
 
 [lib]
 path = "src/lib.rs"
@@ -44,9 +44,11 @@ default = []
 std = []
 
 [dependencies]
+# TODO: remove this dependency if we ever bump the rust-version to 1.64+
+libc = { version = "=0.2.0", default-features = false }
 
 [dev-dependencies]
-pretty_assertions = "1"
+pretty_assertions = "=1.0.0"
 
 [build-dependencies]
-cc = "1"
+cc = "=1.0.0"

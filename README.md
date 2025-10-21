@@ -8,7 +8,7 @@ documentation, but it is not guaranteed to be 100% correct.
 
 ## Minimum Supported Rust Version (MSRV)
 
-The current version of rabbitizer requires **Rust 1.64.0 or greater**.
+The current version of rabbitizer requires **Rust 1.37.0 or greater**.
 
 The current policy is that this may be changed in minor version updates.
 

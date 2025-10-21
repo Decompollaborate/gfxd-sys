@@ -9,7 +9,7 @@
 //! The following methods are available for inserting custom text into the
 //! `gfxd` output.
 
-use core::ffi;
+use crate::ffi;
 
 use crate::{arg_type::ArgType, macro_info::gfxd_value_t};
 

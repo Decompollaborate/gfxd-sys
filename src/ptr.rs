@@ -42,7 +42,6 @@ impl<T> NonNullConst<T> {
     ///
     /// `ptr` must be non-null.
     #[inline]
-    #[track_caller]
     #[must_use]
     pub const unsafe fn new_unchecked(ptr: *const T) -> Self {
         // SAFETY: the caller must guarantee that `ptr` is non-null.
@@ -86,9 +85,8 @@ impl<T> NonNullConst<T> {
     /// When calling this method, you have to ensure that
     /// the pointer is [convertible to a reference](core::ptr#pointer-to-reference-conversion).
     #[inline]
-    #[track_caller]
     #[must_use]
-    pub const unsafe fn as_ref<'a>(&self) -> &'a T {
+    pub unsafe fn as_ref<'a>(&self) -> &'a T {
         // SAFETY: the caller must guarantee that `self` meets all the
         // requirements for a reference.
         unsafe { &*self.as_ptr() }
@@ -98,7 +96,7 @@ impl<T> NonNullConst<T> {
     #[inline]
     #[must_use]
     pub const fn cast<U>(self) -> NonNullConst<U> {
-        let ptr = self.0.as_ptr().cast();
+        let ptr = const_cast_to(self.0.as_ptr());
 
         // SAFETY: `self` is known to be a non-null pointer
         unsafe { NonNullConst::new_unchecked(ptr) }
@@ -125,7 +123,6 @@ impl<T> NonNullMut<T> {
     ///
     /// `ptr` must be non-null.
     #[inline]
-    #[track_caller]
     #[must_use]
     pub const unsafe fn new_unchecked(ptr: *mut T) -> Self {
         // SAFETY: the caller must guarantee that `ptr` is non-null.
@@ -161,7 +158,6 @@ impl<T> NonNullMut<T> {
     /// When calling this method, you have to ensure that
     /// the pointer is [convertible to a reference](core::ptr#pointer-to-reference-conversion).
     #[inline]
-    #[track_caller]
     #[must_use]
     pub unsafe fn as_mut<'a>(&mut self) -> &'a mut T {
         unsafe { &mut *self.as_ptr() }
@@ -171,7 +167,7 @@ impl<T> NonNullMut<T> {
     #[inline]
     #[must_use]
     pub const fn cast<U>(self) -> NonNullMut<U> {
-        let ptr = self.0.as_ptr().cast();
+        let ptr = mut_cast_to(self.0.as_ptr());
 
         // SAFETY: `self` is known to be a non-null pointer
         unsafe { NonNullMut::new_unchecked(ptr) }
@@ -209,5 +205,13 @@ const fn cast_mut<T>(p: *const T) -> *mut T {
 }
 
 const fn cast_const<T>(p: *mut T) -> *const T {
+    p as _
+}
+
+const fn const_cast_to<T, U>(p: *const T) -> *const U {
+    p as _
+}
+
+const fn mut_cast_to<T, U>(p: *mut T) -> *mut U {
     p as _
 }

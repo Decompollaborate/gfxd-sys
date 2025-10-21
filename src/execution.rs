@@ -7,7 +7,7 @@
 //! executing (i.e. after [`gfxd_execute`] has been entered, and before it
 //! returns), the general settings and the I/O settings should not be changed.
 
-use core::ffi;
+use crate::ffi;
 
 extern "C" {
     /// Start executing gfxd with the current settings.

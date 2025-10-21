@@ -17,7 +17,7 @@
 //!
 //! [`gfxd_arg_dflt`]: crate::handlers::gfxd_arg_dflt
 
-use core::ffi;
+use crate::ffi;
 
 extern "C" {
     /// Examines the argument with index `arg_num` and executes the callback

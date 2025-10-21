@@ -3,7 +3,10 @@
 
 #![deny(unsafe_op_in_unsafe_fn)]
 
-use core::ffi;
+mod ffi {
+    pub use libc::{c_char, c_int};
+}
+pub use std::ffi::CStr;
 
 use pretty_assertions::assert_eq;
 
@@ -11,7 +14,7 @@ use gfxd_sys::ptr::{NonNullConst, NonNullMut};
 
 // `bytes` must be nul-terminated
 unsafe fn c_str_from_bytes(bytes: &[u8]) -> NonNullConst<ffi::c_char> {
-    let buf = unsafe { ffi::CStr::from_bytes_with_nul_unchecked(bytes) }.as_ptr();
+    let buf = unsafe { CStr::from_bytes_with_nul_unchecked(bytes) }.as_ptr();
 
     unsafe { NonNullConst::new_unchecked(buf) }
 }
@@ -23,7 +26,7 @@ fn run_gfxd(dlist_data: &[u8]) -> String {
         let user_data = unsafe { gfxd_sys::settings::gfxd_udata_get() }.unwrap();
         let out_buf = unsafe { user_data.cast::<String>().as_mut() };
 
-        let data = unsafe { ffi::CStr::from_ptr(buf) };
+        let data = unsafe { CStr::from_ptr(buf) };
 
         out_buf.push_str(&data.to_string_lossy());
 
@@ -43,7 +46,7 @@ fn run_gfxd(dlist_data: &[u8]) -> String {
     // Setup
     unsafe {
         gfxd_sys::io::gfxd_input_buffer(
-            NonNullConst::new(dlist_data.as_ptr().cast()),
+            NonNullConst::new(dlist_data.as_ptr() as _),
             dlist_data.len() as ffi::c_int,
         );
         gfxd_sys::io::gfxd_output_callback(Some(output));

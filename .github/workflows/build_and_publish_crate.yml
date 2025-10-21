@@ -4,8 +4,8 @@ name: Build and upload Rust crate
 on: [push, pull_request]
 
 env:
-  RUSTFLAGS: "-D warnings"
-  RUSTDOCFLAGS: "-D warnings"
+  RUSTFLAGS: "-D warnings -D unsafe_op_in_unsafe_fn"
+  RUSTDOCFLAGS: "-D warnings -D unsafe_op_in_unsafe_fn"
 
 jobs:
   check_fmt:
@@ -116,6 +116,9 @@ jobs:
   msrv:
     name: Check MSRV is correct
     runs-on: ubuntu-latest
+    env:
+      RUSTFLAGS: "-D warnings"
+      RUSTDOCFLAGS: "-D warnings"
     steps:
       - name: Checkout reposistory
         uses: actions/checkout@main
@@ -131,6 +134,10 @@ jobs:
   msrv_all_features:
     name: Check MSRV is correct for all features
     runs-on: ubuntu-latest
+    env:
+      RUSTFLAGS: "-D warnings"
+      RUSTDOCFLAGS: "-D warnings"
+
     steps:
       - name: Checkout reposistory
         uses: actions/checkout@main

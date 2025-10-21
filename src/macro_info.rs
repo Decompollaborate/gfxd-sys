@@ -11,7 +11,7 @@
 //!
 //! [`gfxd_execute`]: crate::execution::gfxd_execute
 
-use core::ffi;
+use crate::ffi;
 
 use crate::arg_type::ArgType;
 
@@ -145,34 +145,4 @@ pub union gfxd_value_t {
     pub i: i32,
     pub u: u32,
     pub f: f32,
-}
-#[test]
-fn bindgen_test_layout_gfxd_value_t() {
-    const UNINIT: ::core::mem::MaybeUninit<gfxd_value_t> = ::core::mem::MaybeUninit::uninit();
-    let ptr = UNINIT.as_ptr();
-    assert_eq!(
-        ::core::mem::size_of::<gfxd_value_t>(),
-        4usize,
-        "Size of gfxd_value_t"
-    );
-    assert_eq!(
-        ::core::mem::align_of::<gfxd_value_t>(),
-        4usize,
-        "Alignment of gfxd_value_t"
-    );
-    assert_eq!(
-        unsafe { ::core::ptr::addr_of!((*ptr).i) as usize - ptr as usize },
-        0usize,
-        "Offset of field: gfxd_value_t::i"
-    );
-    assert_eq!(
-        unsafe { ::core::ptr::addr_of!((*ptr).u) as usize - ptr as usize },
-        0usize,
-        "Offset of field: gfxd_value_t::u"
-    );
-    assert_eq!(
-        unsafe { ::core::ptr::addr_of!((*ptr).f) as usize - ptr as usize },
-        0usize,
-        "Offset of field: gfxd_value_t::f"
-    );
 }
