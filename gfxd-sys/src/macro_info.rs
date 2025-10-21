@@ -42,9 +42,7 @@ extern "C" {
     /// sub-packets are skipped and the return value of `fn` is returned.
     ///
     /// If `fn` is [`None`] no processing is done and 0 is returned.
-    pub fn gfxd_foreach_pkt(
-        fn_: Option<unsafe extern "C" fn() -> ffi::c_int>,
-    ) -> ffi::c_int;
+    pub fn gfxd_foreach_pkt(fn_: Option<unsafe extern "C" fn() -> ffi::c_int>) -> ffi::c_int;
 
     /// Returns a pointer to the input data for the current macro.
     ///
@@ -130,8 +128,6 @@ extern "C" {
     pub fn gfxd_arg_valid(arg_num: ffi::c_int) -> ffi::c_int;
 }
 
-
-
 pub const gfxd_argfmt_i: _bindgen_ty_5 = _bindgen_ty_5::gfxd_argfmt_i;
 pub const gfxd_argfmt_u: _bindgen_ty_5 = _bindgen_ty_5::gfxd_argfmt_u;
 pub const gfxd_argfmt_f: _bindgen_ty_5 = _bindgen_ty_5::gfxd_argfmt_f;
@@ -142,7 +138,6 @@ pub enum _bindgen_ty_5 {
     gfxd_argfmt_u = 1,
     gfxd_argfmt_f = 2,
 }
-
 
 #[repr(C)]
 #[derive(Copy, Clone)]

@@ -159,7 +159,6 @@ extern "C" {
     pub fn gfxd_dram_callback(fn_: Option<gfxd_dram_fn_t>);
 }
 
-
 /// The argument type is [`gfxd_Tlut`].
 /// The palette index is in `idx` and the number of colors in `count`.
 ///
@@ -172,13 +171,13 @@ pub type gfxd_tlut_fn_t = unsafe extern "C" fn(tlut: u32, idx: i32, count: i32) 
 ///
 /// [`gfxd_Timg`]: crate::arg_type::ArgType::gfxd_Timg
 pub type gfxd_timg_fn_t = unsafe extern "C" fn(
-        timg: u32,
-        fmt: i32,
-        siz: i32,
-        width: i32,
-        height: i32,
-        pal: i32,
-    ) -> ffi::c_int;
+    timg: u32,
+    fmt: i32,
+    siz: i32,
+    width: i32,
+    height: i32,
+    pal: i32,
+) -> ffi::c_int;
 
 /// The argument type is [`gfxd_Cimg`].
 /// The image format is in `fmt` and `siz`, and the horizontal resolution
@@ -201,42 +200,36 @@ pub type gfxd_dl_fn_t = unsafe extern "C" fn(dl: u32) -> ffi::c_int;
 /// The argument type is [`gfxd_Mtxptr`].
 ///
 /// [`gfxd_Mtxptr`]: crate::arg_type::ArgType::gfxd_Mtxptr
-pub type gfxd_mtx_fn_t =
-    unsafe extern "C" fn(mtx: u32) -> ffi::c_int;
+pub type gfxd_mtx_fn_t = unsafe extern "C" fn(mtx: u32) -> ffi::c_int;
 
 /// The argument type is [`gfxd_Lookatptr`].
 /// The number of lookat structures (1 or 2) is in `count`.
 ///
 /// [`gfxd_Lookatptr`]: crate::arg_type::ArgType::gfxd_Lookatptr
-pub type gfxd_lookat_fn_t =
-        unsafe extern "C" fn(lookat: u32, count: i32) -> ffi::c_int;
+pub type gfxd_lookat_fn_t = unsafe extern "C" fn(lookat: u32, count: i32) -> ffi::c_int;
 
 /// The argument type is [`gfxd_Lightptr`].
 ///
 /// [`gfxd_Lightptr`]: crate::arg_type::ArgType::gfxd_Lightptr
-pub type gfxd_light_fn_t =
-    unsafe extern "C" fn(light: u32) -> ffi::c_int;
+pub type gfxd_light_fn_t = unsafe extern "C" fn(light: u32) -> ffi::c_int;
 
 /// The argument type is [`gfxd_Lightsn`].
 /// The number of diffuse lights used is in `num`.
 ///
 /// [`gfxd_Lightsn`]: crate::arg_type::ArgType::gfxd_Lightsn
-pub type gfxd_lightsn_fn_t =
-    unsafe extern "C" fn(lightsn: u32, num: i32) -> ffi::c_int;
+pub type gfxd_lightsn_fn_t = unsafe extern "C" fn(lightsn: u32, num: i32) -> ffi::c_int;
 
 /// The argument type is [`gfxd_Segptr`].
 /// The segment number is in `num`.
 ///
 /// [`gfxd_Segptr`]: crate::arg_type::ArgType::gfxd_Segptr
-pub type gfxd_seg_fn_t =
-    unsafe extern "C" fn(seg: u32, num: i32) -> ffi::c_int;
+pub type gfxd_seg_fn_t = unsafe extern "C" fn(seg: u32, num: i32) -> ffi::c_int;
 
 /// The argument type is [`gfxd_Vtxptr`].
 /// The number of vertex structures is in `num`.
 ///
 /// [`gfxd_Vtxptr`]: crate::arg_type::ArgType::gfxd_Vtxptr
-pub type gfxd_vtx_fn_t =
-    unsafe extern "C" fn(vtx: u32, num: i32) -> ffi::c_int;
+pub type gfxd_vtx_fn_t = unsafe extern "C" fn(vtx: u32, num: i32) -> ffi::c_int;
 
 /// The argument type is [`gfxd_Vpptr`].
 ///
@@ -247,19 +240,16 @@ pub type gfxd_vp_fn_t = unsafe extern "C" fn(vp: u32) -> ffi::c_int;
 /// The size of the text segment is in `size`.
 ///
 /// [`gfxd_Uctext`]: crate::arg_type::ArgType::gfxd_Uctext
-pub type gfxd_uctext_fn_t =
-    unsafe extern "C" fn(text: u32, size: u32) -> ffi::c_int;
+pub type gfxd_uctext_fn_t = unsafe extern "C" fn(text: u32, size: u32) -> ffi::c_int;
 
 /// The argument type is [`gfxd_Ucdata`].
 /// The size of the data segment is in `size`.
 ///
 /// [`gfxd_Ucdata`]: crate::arg_type::ArgType::gfxd_Ucdata
-pub type gfxd_ucdata_fn_t =
-    unsafe extern "C" fn(data: u32, size: u32) -> ffi::c_int;
+pub type gfxd_ucdata_fn_t = unsafe extern "C" fn(data: u32, size: u32) -> ffi::c_int;
 
 /// The argument type is [`gfxd_Dram`].
 /// The size of the data is in `size`.
 ///
 /// [`gfxd_Dram`]: crate::arg_type::ArgType::gfxd_Dram
-pub type gfxd_dram_fn_t =
-    unsafe extern "C" fn(dram: u32, size: u32) -> ffi::c_int;
+pub type gfxd_dram_fn_t = unsafe extern "C" fn(dram: u32, size: u32) -> ffi::c_int;

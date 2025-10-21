@@ -10,9 +10,7 @@ fn main() {
         "vendor/uc_f3dexb.c",
         "vendor/uc_f3dex2.c",
     ];
-    static H_PATHS: [&str; 1] = [
-        "vendor/gfxd.h",
-    ];
+    static H_PATHS: [&str; 1] = ["vendor/gfxd.h"];
 
     for path in C_PATHS.iter().chain(&H_PATHS) {
         println!("cargo:rerun-if-changed={path}");

@@ -9,8 +9,7 @@ use core::ptr::NonNull;
 pub(crate) struct Opaque {
     // https://doc.rust-lang.org/nomicon/ffi.html#representing-opaque-structs
     _data: [u8; 0],
-    _marker:
-        core::marker::PhantomData<(*mut u8, core::marker::PhantomPinned)>,
+    _marker: core::marker::PhantomData<(*mut u8, core::marker::PhantomPinned)>,
 }
 
 /// A wrapper around [`NonNull`] that is explicitly a `const` pointer.
@@ -47,19 +46,14 @@ impl<T> NonNullConst<T> {
     #[must_use]
     pub const unsafe fn new_unchecked(ptr: *const T) -> Self {
         // SAFETY: the caller must guarantee that `ptr` is non-null.
-        unsafe {
-            Self(NonNull::new_unchecked(cast_mut(ptr)))
-        }
+        unsafe { Self(NonNull::new_unchecked(cast_mut(ptr))) }
     }
 
     /// Creates a new `NonNullConst` if `ptr` is non-null.
     #[inline]
     #[must_use]
     pub fn new(ptr: *const T) -> Option<Self> {
-        match NonNull::new(cast_mut(ptr)) {
-            Some(x) => Some(Self(x)),
-            None => None,
-        }
+        NonNull::new(cast_mut(ptr)).map(Self)
     }
 
     /// Converts a reference to a `NonNullConst` pointer.
@@ -67,9 +61,7 @@ impl<T> NonNullConst<T> {
     #[must_use]
     pub const fn from_ref(r: &T) -> Self {
         // SAFETY: A reference cannot be null.
-        unsafe {
-            Self::new_unchecked(r)
-        }
+        unsafe { Self::new_unchecked(r) }
     }
 
     /// Converts a mutable reference to a `NonNullConst` pointer.
@@ -77,9 +69,7 @@ impl<T> NonNullConst<T> {
     #[must_use]
     pub fn from_mut(r: &mut T) -> Self {
         // SAFETY: A mutable reference cannot be null.
-        unsafe {
-            Self::new_unchecked(r)
-        }
+        unsafe { Self::new_unchecked(r) }
     }
 
     /// Acquires the underlying `*const` pointer.
@@ -101,7 +91,7 @@ impl<T> NonNullConst<T> {
     pub const unsafe fn as_ref<'a>(&self) -> &'a T {
         // SAFETY: the caller must guarantee that `self` meets all the
         // requirements for a reference.
-        unsafe{ &*self.as_ptr() }
+        unsafe { &*self.as_ptr() }
     }
 
     /// Casts to a pointer of another type.
@@ -111,7 +101,7 @@ impl<T> NonNullConst<T> {
         let ptr = self.0.as_ptr().cast();
 
         // SAFETY: `self` is known to be a non-null pointer
-        unsafe {NonNullConst::new_unchecked(ptr)}
+        unsafe { NonNullConst::new_unchecked(ptr) }
     }
 }
 
@@ -139,19 +129,14 @@ impl<T> NonNullMut<T> {
     #[must_use]
     pub const unsafe fn new_unchecked(ptr: *mut T) -> Self {
         // SAFETY: the caller must guarantee that `ptr` is non-null.
-        unsafe {
-            Self(NonNull::new_unchecked(ptr))
-        }
+        unsafe { Self(NonNull::new_unchecked(ptr)) }
     }
 
     /// Creates a new `NonNullMut` if `ptr` is non-null.
     #[inline]
     #[must_use]
     pub fn new(ptr: *mut T) -> Option<Self> {
-        match NonNull::new(ptr) {
-            Some(x) => Some(Self(x)),
-            None => None,
-        }
+        NonNull::new(ptr).map(Self)
     }
 
     /// Converts a mutable reference to a `NonNullMut` pointer.
@@ -159,9 +144,7 @@ impl<T> NonNullMut<T> {
     #[must_use]
     pub fn from_mut(r: &mut T) -> Self {
         // SAFETY: A mutable reference cannot be null.
-        unsafe {
-            Self::new_unchecked(r)
-        }
+        unsafe { Self::new_unchecked(r) }
     }
 
     /// Acquires the underlying `*const` pointer.
@@ -181,7 +164,7 @@ impl<T> NonNullMut<T> {
     #[track_caller]
     #[must_use]
     pub unsafe fn as_mut<'a>(&mut self) -> &'a mut T {
-        unsafe{ &mut *self.as_ptr() }
+        unsafe { &mut *self.as_ptr() }
     }
 
     /// Casts to a pointer of another type.
@@ -191,7 +174,7 @@ impl<T> NonNullMut<T> {
         let ptr = self.0.as_ptr().cast();
 
         // SAFETY: `self` is known to be a non-null pointer
-        unsafe {NonNullMut::new_unchecked(ptr)}
+        unsafe { NonNullMut::new_unchecked(ptr) }
     }
 
     /// Casts to a const pointer of the same type.
@@ -201,14 +184,14 @@ impl<T> NonNullMut<T> {
         let ptr = cast_const(self.0.as_ptr());
 
         // SAFETY: `self` is known to be a non-null pointer
-        unsafe {NonNullConst::new_unchecked(ptr)}
+        unsafe { NonNullConst::new_unchecked(ptr) }
     }
 }
 
 impl<T> Clone for NonNullConst<T> {
     #[inline(always)]
     fn clone(&self) -> Self {
-        Self(self.0.clone())
+        *self
     }
 }
 impl<T> Copy for NonNullConst<T> {}
@@ -216,7 +199,7 @@ impl<T> Copy for NonNullConst<T> {}
 impl<T> Clone for NonNullMut<T> {
     #[inline(always)]
     fn clone(&self) -> Self {
-        Self(self.0.clone())
+        *self
     }
 }
 impl<T> Copy for NonNullMut<T> {}

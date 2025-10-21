@@ -91,7 +91,6 @@ extern "C" {
     pub fn gfxd_udata_get() -> Option<NonNullMut<ffi::c_void>>;
 }
 
-
 #[repr(C)]
 pub struct gfxd_ucode {
     _data: Opaque,
@@ -114,7 +113,6 @@ extern "C" {
     pub static gfxd_f3dex2: gfxd_ucode_t;
 }
 
-
 pub const gfxd_endian_big: Endian = Endian::gfxd_endian_big;
 pub const gfxd_endian_little: Endian = Endian::gfxd_endian_little;
 pub const gfxd_endian_host: Endian = Endian::gfxd_endian_host;
@@ -125,7 +123,6 @@ pub enum Endian {
     gfxd_endian_little = 1,
     gfxd_endian_host = 2,
 }
-
 
 /// Stop execution when encountering an invalid macro.
 ///
@@ -138,12 +135,10 @@ pub const gfxd_stop_on_invalid: FeatureOption = FeatureOption::gfxd_stop_on_inva
 /// Enabled by default.
 pub const gfxd_stop_on_end: FeatureOption = FeatureOption::gfxd_stop_on_end;
 
-
 /// Print color components as decimal instead of hexadecimal.
 ///
 /// Disabled by default.
 pub const gfxd_emit_dec_color: FeatureOption = FeatureOption::gfxd_emit_dec_color;
-
 
 /// Print fixed-point conversion `q` macros for fixed-point values.
 ///

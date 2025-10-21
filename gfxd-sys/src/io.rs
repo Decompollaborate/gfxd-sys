@@ -47,13 +47,7 @@ extern "C" {
 }
 
 pub type gfxd_input_fn_t =
-    unsafe extern "C" fn(
-        buf: *mut ffi::c_void,
-        count: ffi::c_int,
-    ) -> ffi::c_int;
+    unsafe extern "C" fn(buf: *mut ffi::c_void, count: ffi::c_int) -> ffi::c_int;
 
 pub type gfxd_output_fn_t =
-    unsafe extern "C" fn(
-        buf: *const ffi::c_char,
-        count: ffi::c_int,
-    ) -> ffi::c_int;
+    unsafe extern "C" fn(buf: *const ffi::c_char, count: ffi::c_int) -> ffi::c_int;

@@ -11,10 +11,7 @@
 
 use core::ffi;
 
-use crate::{
-    macro_info::gfxd_value_t,
-    arg_type::ArgType,
-};
+use crate::{arg_type::ArgType, macro_info::gfxd_value_t};
 
 use crate::ptr::NonNullConst;
 
@@ -22,10 +19,7 @@ extern "C" {
     /// Insert `count` bytes from the buffer at `buf` into the output.
     ///
     /// The number of characters written is returned.
-    pub fn gfxd_write(
-        buf: NonNullConst<ffi::c_void>,
-        count: ffi::c_int,
-    ) -> ffi::c_int;
+    pub fn gfxd_write(buf: NonNullConst<ffi::c_void>, count: ffi::c_int) -> ffi::c_int;
 
     /// Insert the null-terminated string at `str` into the output.
     ///
@@ -54,8 +48,5 @@ extern "C" {
     ///
     /// [`gfxd_arg_type`]: crate::macro_info::gfxd_arg_type
     /// [`gfxd_arg_value`]: crate::macro_info::gfxd_arg_value
-    pub fn gfxd_print_value(
-        type_: ArgType,
-        value: NonNullConst<gfxd_value_t>,
-    ) -> ffi::c_int;
+    pub fn gfxd_print_value(type_: ArgType, value: NonNullConst<gfxd_value_t>) -> ffi::c_int;
 }
