@@ -117,8 +117,8 @@ jobs:
     name: Check MSRV is correct
     runs-on: ubuntu-latest
     env:
-      RUSTFLAGS: "-D warnings"
-      RUSTDOCFLAGS: "-D warnings"
+      RUSTFLAGS: "-D warnings -A unused-unsafe"
+      RUSTDOCFLAGS: "-D warnings -A unused-unsafe"
     steps:
       - name: Checkout reposistory
         uses: actions/checkout@main
@@ -135,8 +135,8 @@ jobs:
     name: Check MSRV is correct for all features
     runs-on: ubuntu-latest
     env:
-      RUSTFLAGS: "-D warnings"
-      RUSTDOCFLAGS: "-D warnings"
+      RUSTFLAGS: "-D warnings -A unused-unsafe"
+      RUSTDOCFLAGS: "-D warnings -A unused-unsafe"
 
     steps:
       - name: Checkout reposistory
