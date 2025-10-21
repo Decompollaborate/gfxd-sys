@@ -7,12 +7,25 @@ edition = "2018"
 version.workspace = true
 authors.workspace = true
 repository.workspace = true
-# license.workspace = true
+license = "MIT"
 description = "Rust bindings for libgfxd, the N64 display list decompiler library"
 readme = "README.md"
-# keywords = ["MIPS", "decoder"]
-# categories = ["no-std", "no-std::no-alloc"]
+keywords = [
+    "disassembler",
+    "n64",
+    "nintendo",
+    "ffi",
+    "sys",
+    "no_std",
+    "bindings",
+]
+categories = [
+    "parsing",
+    "external-ffi-bindings",
+    "no-std",
+]
 build = "build.rs"
+links = "gfxd"
 
 # Use https://github.com/foresterre/cargo-msrv to check the MSRV
 # ```
