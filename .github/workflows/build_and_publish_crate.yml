@@ -82,7 +82,7 @@ jobs:
         run: cargo doc --all-features
 
   run_tests_sys:
-    name: Run tests - No features
+    name: Run sys tests - No features
     runs-on: ubuntu-latest
 
     steps:
@@ -96,6 +96,22 @@ jobs:
 
       - name: Run tests
         run: cargo test -p gfxd-sys --no-default-features
+
+  run_tests_sys_all_features:
+    name: Run sys tests - All features
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout reposistory
+        uses: actions/checkout@main
+        with:
+          submodules: 'recursive'
+
+      - name: Setup Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Run tests
+        run: cargo test -p gfxd-sys --all-features
 
   msrv:
     name: Check MSRV is correct
@@ -136,6 +152,7 @@ jobs:
       - check_clippy_sys_all_features
       - check_doc
       - run_tests_sys
+      - run_tests_sys_all_features
       - msrv
       - msrv_all_features
 
