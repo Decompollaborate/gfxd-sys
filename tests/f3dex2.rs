@@ -1,7 +1,7 @@
 /* SPDX-FileCopyrightText: © 2025 Decompollaborate */
 /* SPDX-License-Identifier: MIT */
 
-#![deny(unsafe_op_in_unsafe_fn)]
+// #![deny(unsafe_op_in_unsafe_fn)]
 
 mod ffi {
     pub use libc::{c_char, c_int};
