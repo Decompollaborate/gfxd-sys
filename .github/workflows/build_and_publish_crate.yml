@@ -95,7 +95,7 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
 
       - name: Run tests
-        run: cargo test --no-default-features
+        run: cargo test --no-default-features --jobs 1
 
   run_tests_all_features:
     name: Run tests - All features
@@ -111,7 +111,7 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
 
       - name: Run tests
-        run: cargo test --all-features
+        run: cargo test --all-features --jobs 1
 
   msrv:
     name: Check MSRV is correct
