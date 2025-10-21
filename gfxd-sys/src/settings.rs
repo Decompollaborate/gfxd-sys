@@ -5,6 +5,7 @@
 
 use core::ffi;
 
+use crate::ptr::{NonNullConst, NonNullMut, Opaque};
 
 extern "C" {
     /// Select `ucode` as the target microcode.
@@ -14,17 +15,17 @@ extern "C" {
     ///
     /// The microcode must be selected before `gfxd_execute`, as no microcode
     /// is selected by default.
-    pub fn gfxd_target(ucode: gfxd_ucode_t);
+    pub fn gfxd_target(ucode: Option<gfxd_ucode_t>);
 
     /// Select `endian` as the endianness of the input, and `wordsize` as the
     /// size of each word in number of bytes.
     ///
-    /// `endian` can be `gfxd_endian_big`, `gfxd_endian_little`, or
-    /// `gfxd_endian_host` (the endianness of the host machine).
+    /// `endian` can be [`gfxd_endian_big`], [`gfxd_endian_little`], or
+    /// [`gfxd_endian_host`] (the endianness of the host machine).
     ///
     /// `wordsize` can be 1, 2, 4, or 8. Big endian is selected by default,
     /// with a word size of 4.
-    pub fn gfxd_endian(endian: ffi::c_int, wordsize: ffi::c_int);
+    pub fn gfxd_endian(endian: Endian, wordsize: ffi::c_int);
 
     /// Enable or disable the use of dynamic `g` macros instead of static `gs`
     /// macros, and select the dynamic display list pointer argument to be
@@ -39,31 +40,32 @@ extern "C" {
     /// Also affects the result of `gfxd_macro_name`, as it will return either
     /// the dynamic or static version of the macro name as selected by this
     /// setting.
-    pub fn gfxd_dynamic(arg: *const ffi::c_char);
+    pub fn gfxd_dynamic(arg: Option<NonNullConst<ffi::c_char>>);
 
     /// Enable or disable the feature specified by `cap`.
     ///
     /// Can be one of the following;
-    /// - `gfxd_stop_on_invalid`: Stop execution when encountering an invalid
+    /// - [`gfxd_stop_on_invalid`]: Stop execution when encountering an invalid
     ///   macro.
     ///
     ///   Enabled by default.
     ///
-    /// - `gfxd_stop_on_end`: Stop execution when encountering a `SPBranchList`
+    /// - [`gfxd_stop_on_end`]: Stop execution when encountering a `SPBranchList`
     ///   or `SPEndDisplayList`.
     ///
     ///   Enabled by default.
     ///
-    /// - `gfxd_emit_dec_color`: Print color components as decimal instead of
+    /// - [`gfxd_emit_dec_color`]: Print color components as decimal instead of
     ///   hexadecimal.
     ///
     ///   Disabled by default.
     ///
-    /// - `gfxd_emit_q_macro`: Print fixed-point conversion `q` macros for
+    /// - [`gfxd_emit_q_macro`]: Print fixed-point conversion `q` macros for
     ///   fixed-point values.
+    ///
     ///   Disabled by default.
     ///
-    /// - `gfxd_emit_ext_macro`: Emit non-standard macros.
+    /// - [`gfxd_emit_ext_macro`]: Emit non-standard macros.
     ///
     ///   Some commands are valid (though possibly meaningless), but have no
     ///   macros associated with them, such as a standalone `G_RDPHALF_1`. When
@@ -73,31 +75,28 @@ extern "C" {
     ///   Also enables some non-standard multi-packet texture loading macros.
     ///
     ///   Disabled by default.
-    pub fn gfxd_enable(cap: ffi::c_int);
+    pub fn gfxd_enable(cap: FeatureOption);
 
     /// Enable or disable the feature specified by `cap`.
     ///
     /// See [`gfxd_enable`] for possible values.
-    pub fn gfxd_disable(cap: ffi::c_int);
+    pub fn gfxd_disable(cap: FeatureOption);
 
     /// Set or get a generic pointer that can be used to pass user-defined data
     /// in and out of callback functions.
-    pub fn gfxd_udata_set(ptr: *mut ffi::c_void);
+    pub fn gfxd_udata_set(ptr: Option<NonNullMut<ffi::c_void>>);
 
     /// Set or get a generic pointer that can be used to pass user-defined data
     /// in and out of callback functions.
-    pub fn gfxd_udata_get() -> *mut ffi::c_void;
+    pub fn gfxd_udata_get() -> Option<NonNullMut<ffi::c_void>>;
 }
 
 
 #[repr(C)]
 pub struct gfxd_ucode {
-    // https://doc.rust-lang.org/nomicon/ffi.html#representing-opaque-structs
-    _data: (),
-    _marker:
-        core::marker::PhantomData<(*mut u8, core::marker::PhantomPinned)>,
+    _data: Opaque,
 }
-pub type gfxd_ucode_t = *const gfxd_ucode;
+pub type gfxd_ucode_t = NonNullConst<gfxd_ucode>;
 
 extern "C" {
     pub static gfxd_f3d: gfxd_ucode_t;
@@ -116,29 +115,86 @@ extern "C" {
 }
 
 
-pub const gfxd_endian_big: _bindgen_ty_4 = _bindgen_ty_4::gfxd_endian_big;
-pub const gfxd_endian_little: _bindgen_ty_4 = _bindgen_ty_4::gfxd_endian_little;
-pub const gfxd_endian_host: _bindgen_ty_4 = _bindgen_ty_4::gfxd_endian_host;
+pub const gfxd_endian_big: Endian = Endian::gfxd_endian_big;
+pub const gfxd_endian_little: Endian = Endian::gfxd_endian_little;
+pub const gfxd_endian_host: Endian = Endian::gfxd_endian_host;
 #[repr(u32)]
 #[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
-pub enum _bindgen_ty_4 {
+pub enum Endian {
     gfxd_endian_big = 0,
     gfxd_endian_little = 1,
     gfxd_endian_host = 2,
 }
 
 
-pub const gfxd_stop_on_invalid: _bindgen_ty_3 = _bindgen_ty_3::gfxd_stop_on_invalid;
-pub const gfxd_stop_on_end: _bindgen_ty_3 = _bindgen_ty_3::gfxd_stop_on_end;
-pub const gfxd_emit_dec_color: _bindgen_ty_3 = _bindgen_ty_3::gfxd_emit_dec_color;
-pub const gfxd_emit_q_macro: _bindgen_ty_3 = _bindgen_ty_3::gfxd_emit_q_macro;
-pub const gfxd_emit_ext_macro: _bindgen_ty_3 = _bindgen_ty_3::gfxd_emit_ext_macro;
+/// Stop execution when encountering an invalid macro.
+///
+/// Enabled by default.
+pub const gfxd_stop_on_invalid: FeatureOption = FeatureOption::gfxd_stop_on_invalid;
+
+/// Stop execution when encountering a `SPBranchList` or
+/// `SPEndDisplayList`.
+///
+/// Enabled by default.
+pub const gfxd_stop_on_end: FeatureOption = FeatureOption::gfxd_stop_on_end;
+
+
+/// Print color components as decimal instead of hexadecimal.
+///
+/// Disabled by default.
+pub const gfxd_emit_dec_color: FeatureOption = FeatureOption::gfxd_emit_dec_color;
+
+
+/// Print fixed-point conversion `q` macros for fixed-point values.
+///
+/// Disabled by default.
+pub const gfxd_emit_q_macro: FeatureOption = FeatureOption::gfxd_emit_q_macro;
+
+/// Emit non-standard macros.
+///
+/// Some commands are valid (though possibly meaningless), but have no
+/// macros associated with them, such as a standalone `G_RDPHALF_1`. When
+/// this feature is enabled, such a command will produce a non-standard
+/// `gsDPHalf1` macro instead of a raw hexadecimal command.
+///
+/// Also enables some non-standard multi-packet texture loading macros.
+///
+/// Disabled by default.
+pub const gfxd_emit_ext_macro: FeatureOption = FeatureOption::gfxd_emit_ext_macro;
+
 #[repr(u32)]
 #[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
-pub enum _bindgen_ty_3 {
+pub enum FeatureOption {
+    /// Stop execution when encountering an invalid macro.
+    ///
+    /// Enabled by default.
     gfxd_stop_on_invalid = 0,
+
+    /// Stop execution when encountering a `SPBranchList` or
+    /// `SPEndDisplayList`.
+    ///
+    /// Enabled by default.
     gfxd_stop_on_end = 1,
+
+    /// Print color components as decimal instead of hexadecimal.
+    ///
+    /// Disabled by default.
     gfxd_emit_dec_color = 2,
+
+    /// Print fixed-point conversion `q` macros for fixed-point values.
+    ///
+    /// Disabled by default.
     gfxd_emit_q_macro = 3,
+
+    /// Emit non-standard macros.
+    ///
+    /// Some commands are valid (though possibly meaningless), but have no
+    /// macros associated with them, such as a standalone `G_RDPHALF_1`. When
+    /// this feature is enabled, such a command will produce a non-standard
+    /// `gsDPHalf1` macro instead of a raw hexadecimal command.
+    ///
+    /// Also enables some non-standard multi-packet texture loading macros.
+    ///
+    /// Disabled by default.
     gfxd_emit_ext_macro = 4,
 }

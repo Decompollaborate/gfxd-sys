@@ -1,25 +1,24 @@
 /* SPDX-FileCopyrightText: © 2025 Decompollaborate */
 /* SPDX-License-Identifier: MIT */
 
+#![deny(unsafe_op_in_unsafe_fn)]
+
 use core::ffi;
 
 use pretty_assertions::assert_eq;
 
-fn as_void_ptr_mut<T>(v: &mut T) -> *mut ffi::c_void {
-    v as *mut T as _
-}
+use gfxd_sys::ptr::{NonNullConst, NonNullMut};
 
-unsafe fn from_void_ptr_mut<'a, T>(v: *mut ffi::c_void) -> &'a mut T {
-    unsafe {    &mut *(v as *mut T) }
-}
+// `bytes` must be nul-terminated
+unsafe fn c_str_from_bytes(bytes: &[u8]) -> NonNullConst<ffi::c_char> {
+    let buf = unsafe {
+        ffi::CStr::from_bytes_with_nul_unchecked(bytes)
+    }.as_ptr();
 
-/*
-fn as_nonnull_void_ptr_mut<T>(v: &mut T) -> core::ptr::NonNull<ffi::c_void> {
     unsafe {
-        NonNull::new_unchecked(as_void_ptr_mut(v))
+        NonNullConst::new_unchecked(buf)
     }
 }
-*/
 
 fn run_gfxd(dlist_data: &[u8]) -> String {
     let mut out_buf = String::new();
@@ -28,9 +27,9 @@ fn run_gfxd(dlist_data: &[u8]) -> String {
         buf: *const ffi::c_char,
         count: ffi::c_int,
     ) -> ffi::c_int {
+        let user_data = unsafe {gfxd_sys::settings::gfxd_udata_get()}.unwrap();
         let out_buf = unsafe {
-            let user_data = gfxd_sys::settings::gfxd_udata_get();
-            from_void_ptr_mut::<String>(user_data)
+            user_data.cast::<String>().as_mut()
         };
 
         let data = unsafe {
@@ -45,26 +44,27 @@ fn run_gfxd(dlist_data: &[u8]) -> String {
     extern "C" fn  macro_fn() -> ffi::c_int {
         unsafe {
             /* Print a tab before each macro, and a comma and newline after each macro */
-            gfxd_sys::custom_output::gfxd_puts(ffi::CStr::from_bytes_with_nul_unchecked(b"    \0").as_ptr());
+            gfxd_sys::custom_output::gfxd_puts(c_str_from_bytes(b"    \0"));
             gfxd_sys::handlers::gfxd_macro_dflt(); /* Execute the default macro handler */
-            gfxd_sys::custom_output::gfxd_puts(ffi::CStr::from_bytes_with_nul_unchecked(b",\n\0").as_ptr());
+            gfxd_sys::custom_output::gfxd_puts(c_str_from_bytes(b",\n\0"));
         }
         0
     }
 
     // Setup
     unsafe {
-        gfxd_sys::io::gfxd_input_buffer(dlist_data.as_ptr() as *const ffi::c_void, dlist_data.len() as ffi::c_int);
+        gfxd_sys::io::gfxd_input_buffer(NonNullConst::new(dlist_data.as_ptr().cast()), dlist_data.len() as ffi::c_int);
         gfxd_sys::io::gfxd_output_callback(Some(output));
         gfxd_sys::handlers::gfxd_macro_fn(Some(macro_fn));
-        gfxd_sys::settings::gfxd_udata_set(as_void_ptr_mut(&mut out_buf));
-        gfxd_sys::settings::gfxd_target(gfxd_sys::settings::gfxd_f3dex2);
+        gfxd_sys::settings::gfxd_udata_set(NonNullMut::new(&mut out_buf as _).map(|x| x.cast()));
+        gfxd_sys::settings::gfxd_target(Some(gfxd_sys::settings::gfxd_f3dex2));
     }
 
+    // Run
     unsafe {
-        gfxd_sys::custom_output::gfxd_puts(ffi::CStr::from_bytes_with_nul_unchecked(b"{\n\0").as_ptr());
+        gfxd_sys::custom_output::gfxd_puts(c_str_from_bytes(b"{\n\0"));
         gfxd_sys::execution::gfxd_execute();
-        gfxd_sys::custom_output::gfxd_puts(ffi::CStr::from_bytes_with_nul_unchecked(b"}\n\0").as_ptr());
+        gfxd_sys::custom_output::gfxd_puts(c_str_from_bytes(b"}\n\0"));
     }
 
     out_buf
