@@ -1,15 +1,52 @@
 # SPDX-FileCopyrightText: © 2025 Decompollaborate
 # SPDX-License-Identifier: MIT
 
-[workspace]
-members = [
-    "gfxd-sys",
-]
-resolver = "2"
-
-[workspace.package]
+[package]
+name = "gfxd-sys"
+edition = "2018"
 version = "0.1.0"
 authors = [
     "Anghelo Carvajal <angheloalf95@gmail.com>",
 ]
-repository = "https://github.com/Decompollaborate/gfxd-rs"
+repository = "https://github.com/Decompollaborate/gfxd-sys"
+license = "MIT"
+description = "Rust bindings for libgfxd, the N64 display list decompiler library"
+readme = "README.md"
+keywords = [
+    "disassembler",
+    "n64",
+    "nintendo",
+    "ffi",
+    "sys",
+    "no_std",
+    "bindings",
+]
+categories = [
+    "parsing",
+    "external-ffi-bindings",
+    "no-std",
+]
+build = "build.rs"
+links = "gfxd"
+
+# Use https://github.com/foresterre/cargo-msrv to check the MSRV
+# ```
+# cargo install cargo-msrv --locked --force
+# cargo msrv find -- cargo check -p gfxd-sys
+# ```
+rust-version = "1.64.0"
+
+[lib]
+path = "src/lib.rs"
+
+[features]
+default = []
+std = []
+
+[dependencies]
+
+[dev-dependencies]
+pretty_assertions = "1"
+
+[build-dependencies]
+cc = "1"
