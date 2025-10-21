@@ -29,15 +29,15 @@ extern "C" {
     /// Use the provided callback function, `fn`.
     ///
     /// `fn` should copy at most `count` bytes to/from `buf`, and return the
-    /// number of bytes actually copied. The input callback should return 0 to
-    /// signal end of input.
+    /// number of bytes actually copied.
+    ///
+    /// The input callback should return 0 to signal end of input.
     pub fn gfxd_input_callback(fn_: gfxd_input_fn_t);
 
     /// Use the provided callback function, `fn`.
     ///
     /// `fn` should copy at most `count` bytes to/from `buf`, and return the
-    /// number of bytes actually copied. The input callback should return 0 to
-    /// signal end of input.
+    /// number of bytes actually copied.
     pub fn gfxd_output_callback(fn_: gfxd_output_fn_t);
 }
 
