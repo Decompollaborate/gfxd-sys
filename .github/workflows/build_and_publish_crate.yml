@@ -4,8 +4,8 @@ name: Build and upload Rust crate
 on: [push, pull_request]
 
 env:
-  RUSTFLAGS: "-D warnings -D unsafe_op_in_unsafe_fn"
-  RUSTDOCFLAGS: "-D warnings -D unsafe_op_in_unsafe_fn"
+  RUSTFLAGS: "-D warnings"
+  RUSTDOCFLAGS: "-D warnings"
 
 jobs:
   check_fmt:
@@ -81,6 +81,26 @@ jobs:
       - name: Run doc
         run: cargo doc --all-features
 
+  plain_build:
+    name: Plain build on stable
+    runs-on: ubuntu-latest
+    # Deny unsafe_op_in_unsafe_fn only in Rust stable builds, because older
+    # Rust versions don't know about that lint.
+    env:
+      RUSTFLAGS: "-D warnings -D unsafe_op_in_unsafe_fn"
+      RUSTDOCFLAGS: "-D warnings -D unsafe_op_in_unsafe_fn"
+    steps:
+      - name: Checkout reposistory
+        uses: actions/checkout@main
+        with:
+          submodules: 'recursive'
+
+      - name: Setup Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: build
+        run: cargo build
+
   run_tests:
     name: Run tests on ${{ matrix.rust_version }} - No features
     runs-on: ubuntu-latest
@@ -91,6 +111,10 @@ jobs:
           - '1.37' # Current MSRV
           - 'stable'
           - 'nightly'
+    # 1.37 warns about unused-unsafe, which we do want, kinda
+    env:
+      RUSTFLAGS: "-D warnings -A unused-unsafe"
+      RUSTDOCFLAGS: "-D warnings -A unused-unsafe"
 
     steps:
       - name: Checkout reposistory
@@ -116,6 +140,9 @@ jobs:
           - '1.37' # Current MSRV
           - 'stable'
           - 'nightly'
+    env:
+      RUSTFLAGS: "-D warnings -A unused-unsafe"
+      RUSTDOCFLAGS: "-D warnings -A unused-unsafe"
 
     steps:
       - name: Checkout reposistory
@@ -147,7 +174,7 @@ jobs:
         uses: taiki-e/install-action@cargo-hack
 
       - name: Run MSRV checker
-        run: cargo hack check --rust-version --workspace --all-targets --ignore-private
+        run: cargo hack check --rust-version --all-targets --ignore-private
 
   msrv_all_features:
     name: Check MSRV is correct for all features
@@ -166,7 +193,7 @@ jobs:
         uses: taiki-e/install-action@cargo-hack
 
       - name: Run MSRV checker
-        run: cargo hack check --rust-version --workspace --all-targets --ignore-private --all-features
+        run: cargo hack check --rust-version --all-targets --ignore-private --all-features
 
   publish_gfxd_sys:
     name: Publish sys crate
@@ -191,7 +218,7 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
 
       - name: Build Rust package
-        run: cargo build --release --workspace
+        run: cargo build --release
 
       - name: Publish gfxd-sys dry run
         if: github.event_name == 'push' && !startsWith(github.ref, 'refs/tags/')
