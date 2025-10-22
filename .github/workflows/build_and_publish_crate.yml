@@ -82,8 +82,15 @@ jobs:
         run: cargo doc --all-features
 
   run_tests:
-    name: Run tests - No features
+    name: Run tests on ${{ matrix.rust_version }} - No features
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        rust_version:
+          - '1.37' # Current MSRV
+          - 'stable'
+          - 'nightly'
 
     steps:
       - name: Checkout reposistory
@@ -92,14 +99,23 @@ jobs:
           submodules: 'recursive'
 
       - name: Setup Rust toolchain
-        uses: dtolnay/rust-toolchain@stable
+        uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: ${{ matrix.rust_version }}
 
       - name: Run tests
         run: cargo test --no-default-features
 
   run_tests_all_features:
-    name: Run tests - All features
+    name: Run tests on ${{ matrix.rust_version }} - All features
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        rust_version:
+          - '1.37' # Current MSRV
+          - 'stable'
+          - 'nightly'
 
     steps:
       - name: Checkout reposistory
@@ -108,7 +124,9 @@ jobs:
           submodules: 'recursive'
 
       - name: Setup Rust toolchain
-        uses: dtolnay/rust-toolchain@stable
+        uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: ${{ matrix.rust_version }}
 
       - name: Run tests
         run: cargo test --all-features

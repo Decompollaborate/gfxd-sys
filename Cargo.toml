@@ -34,6 +34,8 @@ links = "gfxd"
 # cargo install cargo-msrv --locked --force
 # cargo msrv find
 # ```
+#
+# Don't forget to update this in CI too.
 rust-version = "1.37.0"
 
 [lib]
