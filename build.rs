@@ -19,6 +19,7 @@ fn main() {
     cc::Build::new()
         .files(&C_PATHS)
         .include("vendor")
+        .define("CONFIG_MT", "1")
         .warnings(false)
         .compile("gfxd");
 }
