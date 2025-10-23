@@ -46,12 +46,12 @@ fn run_gfxd(dlist_data: &[u8]) -> String {
     // Setup
     unsafe {
         gfxd_sys::io::gfxd_input_buffer(
-            NonNullConst::new(dlist_data.as_ptr() as _),
-            dlist_data.len() as ffi::c_int,
+            NonNullConst::new_void(dlist_data.as_ptr()),
+            dlist_data.len() as _,
         );
         gfxd_sys::io::gfxd_output_callback(Some(output));
         gfxd_sys::handlers::gfxd_macro_fn(Some(macro_fn));
-        gfxd_sys::settings::gfxd_udata_set(NonNullMut::new(&mut out_buf as _).map(|x| x.cast()));
+        gfxd_sys::settings::gfxd_udata_set(NonNullMut::new_void(&mut out_buf));
         gfxd_sys::settings::gfxd_target(Some(gfxd_sys::settings::gfxd_f3dex2));
     }
 

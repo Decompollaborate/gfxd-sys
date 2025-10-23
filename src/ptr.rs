@@ -5,6 +5,8 @@
 
 use core::ptr::NonNull;
 
+use crate::ffi;
+
 #[repr(C)]
 pub(crate) struct Opaque {
     // https://doc.rust-lang.org/nomicon/ffi.html#representing-opaque-structs
@@ -15,14 +17,21 @@ pub(crate) struct Opaque {
 /// A wrapper around [`NonNull`] that is explicitly a `const` pointer.
 #[repr(transparent)]
 #[derive(Debug)]
-pub struct NonNullConst<T>(NonNull<T>);
+pub struct NonNullConst<T>(NonNull<T>)
+where
+    T: ?Sized;
 
 /// A wrapper around [`NonNull`] that is explicitly a `mut` pointer.
 #[repr(transparent)]
 #[derive(Debug)]
-pub struct NonNullMut<T>(NonNull<T>);
+pub struct NonNullMut<T>(NonNull<T>)
+where
+    T: ?Sized;
 
-impl<T> NonNullConst<T> {
+impl<T> NonNullConst<T>
+where
+    T: ?Sized,
+{
     /// Convert into a plain [`NonNull`].
     #[inline]
     #[must_use]
@@ -44,15 +53,23 @@ impl<T> NonNullConst<T> {
     #[inline]
     #[must_use]
     pub const unsafe fn new_unchecked(ptr: *const T) -> Self {
+        // NonNull wants a mut pointer for whatever reason.
+        let mut_ptr = cast_mut(ptr);
+
         // SAFETY: the caller must guarantee that `ptr` is non-null.
-        unsafe { Self(NonNull::new_unchecked(cast_mut(ptr))) }
+        let inner = unsafe { NonNull::new_unchecked(mut_ptr) };
+
+        Self(inner)
     }
 
     /// Creates a new `NonNullConst` if `ptr` is non-null.
     #[inline]
     #[must_use]
     pub fn new(ptr: *const T) -> Option<Self> {
-        NonNull::new(cast_mut(ptr)).map(Self)
+        // NonNull wants a mut pointer for whatever reason.
+        let mut_ptr = cast_mut(ptr);
+
+        NonNull::new(mut_ptr).map(Self)
     }
 
     /// Converts a reference to a `NonNullConst` pointer.
@@ -103,7 +120,51 @@ impl<T> NonNullConst<T> {
     }
 }
 
-impl<T> NonNullMut<T> {
+impl NonNullConst<ffi::c_void> {
+    /// Creates a new `NonNullConst`, casting the passsed pointer to void
+    /// pointer.
+    ///
+    /// # Safety
+    ///
+    /// `ptr` must be non-null.
+    #[inline]
+    #[must_use]
+    pub const unsafe fn new_void_unchecked<U>(ptr: *const U) -> Self
+    where
+        U: ?Sized,
+    {
+        // Cast to void pointer.
+        let void_ptr: *const ffi::c_void = const_cast_to(ptr);
+        // NonNull wants a mut pointer for whatever reason.
+        let mut_void_ptr = cast_mut(void_ptr);
+
+        // SAFETY: the caller must guarantee that `ptr` is non-null.
+        let inner = unsafe { NonNull::new_unchecked(mut_void_ptr) };
+
+        Self(inner)
+    }
+
+    /// Creates a new `NonNullConst` if `ptr` is non-null, casting the pointer
+    /// to a void pointer.
+    #[inline]
+    #[must_use]
+    pub fn new_void<U>(ptr: *const U) -> Option<Self>
+    where
+        U: ?Sized,
+    {
+        // Cast to void pointer.
+        let void_ptr: *const ffi::c_void = const_cast_to(ptr);
+        // NonNull wants a mut pointer for whatever reason.
+        let mut_void_ptr = cast_mut(void_ptr);
+
+        NonNull::new(mut_void_ptr).map(Self)
+    }
+}
+
+impl<T> NonNullMut<T>
+where
+    T: ?Sized,
+{
     /// Convert into a plain [`NonNull`].
     #[inline]
     #[must_use]
@@ -126,7 +187,9 @@ impl<T> NonNullMut<T> {
     #[must_use]
     pub const unsafe fn new_unchecked(ptr: *mut T) -> Self {
         // SAFETY: the caller must guarantee that `ptr` is non-null.
-        unsafe { Self(NonNull::new_unchecked(ptr)) }
+        let inner = unsafe { NonNull::new_unchecked(ptr) };
+
+        Self(inner)
     }
 
     /// Creates a new `NonNullMut` if `ptr` is non-null.
@@ -184,34 +247,89 @@ impl<T> NonNullMut<T> {
     }
 }
 
-impl<T> Clone for NonNullConst<T> {
+impl NonNullMut<ffi::c_void> {
+    /// Creates a new `NonNullMut`, casting the passsed pointer to void
+    /// pointer.
+    ///
+    /// # Safety
+    ///
+    /// `ptr` must be non-null.
+    #[inline]
+    #[must_use]
+    pub const unsafe fn new_void_unchecked<U>(ptr: *mut U) -> Self
+    where
+        U: ?Sized,
+    {
+        // Cast to void pointer.
+        let void_ptr: *mut ffi::c_void = mut_cast_to(ptr);
+
+        // SAFETY: the caller must guarantee that `ptr` is non-null.
+        let inner = unsafe { NonNull::new_unchecked(void_ptr) };
+
+        Self(inner)
+    }
+
+    /// Creates a new `NonNullMut` if `ptr` is non-null, casting the pointer to
+    /// a void pointer.
+    #[inline]
+    #[must_use]
+    pub fn new_void<U>(ptr: *mut U) -> Option<Self>
+    where
+        U: ?Sized,
+    {
+        // Cast to void pointer.
+        let void_ptr: *mut ffi::c_void = mut_cast_to(ptr);
+
+        NonNull::new(void_ptr).map(Self)
+    }
+}
+
+impl<T> Clone for NonNullConst<T>
+where
+    T: ?Sized,
+{
     #[inline(always)]
     fn clone(&self) -> Self {
         *self
     }
 }
-impl<T> Copy for NonNullConst<T> {}
+impl<T> Copy for NonNullConst<T> where T: ?Sized {}
 
-impl<T> Clone for NonNullMut<T> {
+impl<T> Clone for NonNullMut<T>
+where
+    T: ?Sized,
+{
     #[inline(always)]
     fn clone(&self) -> Self {
         *self
     }
 }
-impl<T> Copy for NonNullMut<T> {}
+impl<T> Copy for NonNullMut<T> where T: ?Sized {}
 
-const fn cast_mut<T>(p: *const T) -> *mut T {
+const fn cast_mut<T>(p: *const T) -> *mut T
+where
+    T: ?Sized,
+{
     p as _
 }
 
-const fn cast_const<T>(p: *mut T) -> *const T {
+const fn cast_const<T>(p: *mut T) -> *const T
+where
+    T: ?Sized,
+{
     p as _
 }
 
-const fn const_cast_to<T, U>(p: *const T) -> *const U {
+const fn const_cast_to<T, U>(p: *const T) -> *const U
+where
+    T: ?Sized,
+{
     p as _
 }
 
-const fn mut_cast_to<T, U>(p: *mut T) -> *mut U {
+const fn mut_cast_to<T, U>(p: *mut T) -> *mut U
+where
+    T: ?Sized,
+{
     p as _
 }

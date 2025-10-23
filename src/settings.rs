@@ -99,17 +99,9 @@ pub type gfxd_ucode_t = NonNullConst<gfxd_ucode>;
 
 extern "C" {
     pub static gfxd_f3d: gfxd_ucode_t;
-}
-extern "C" {
     pub static gfxd_f3db: gfxd_ucode_t;
-}
-extern "C" {
     pub static gfxd_f3dex: gfxd_ucode_t;
-}
-extern "C" {
     pub static gfxd_f3dexb: gfxd_ucode_t;
-}
-extern "C" {
     pub static gfxd_f3dex2: gfxd_ucode_t;
 }
 
