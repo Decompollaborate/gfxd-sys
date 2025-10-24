@@ -3,7 +3,7 @@
 
 //! Pointer utilities.
 
-use core::ptr::NonNull;
+use core::{cmp, fmt, hash, ptr::NonNull};
 
 use crate::ffi;
 
@@ -16,14 +16,12 @@ pub(crate) struct Opaque {
 
 /// A wrapper around [`NonNull`] that is explicitly a `const` pointer.
 #[repr(transparent)]
-#[derive(Debug)]
 pub struct NonNullConst<T>(NonNull<T>)
 where
     T: ?Sized;
 
 /// A wrapper around [`NonNull`] that is explicitly a `mut` pointer.
 #[repr(transparent)]
-#[derive(Debug)]
 pub struct NonNullMut<T>(NonNull<T>)
 where
     T: ?Sized;
@@ -77,14 +75,6 @@ where
     #[must_use]
     pub const fn from_ref(r: &T) -> Self {
         // SAFETY: A reference cannot be null.
-        unsafe { Self::new_unchecked(r) }
-    }
-
-    /// Converts a mutable reference to a `NonNullConst` pointer.
-    #[inline]
-    #[must_use]
-    pub fn from_mut(r: &mut T) -> Self {
-        // SAFETY: A mutable reference cannot be null.
         unsafe { Self::new_unchecked(r) }
     }
 
@@ -284,6 +274,23 @@ impl NonNullMut<ffi::c_void> {
     }
 }
 
+impl<T> fmt::Debug for NonNullConst<T>
+where
+    T: ?Sized,
+{
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        fmt::Debug::fmt(&self, f)
+    }
+}
+impl<T> fmt::Pointer for NonNullConst<T>
+where
+    T: ?Sized,
+{
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        fmt::Pointer::fmt(&self, f)
+    }
+}
+
 impl<T> Clone for NonNullConst<T>
 where
     T: ?Sized,
@@ -295,6 +302,78 @@ where
 }
 impl<T> Copy for NonNullConst<T> where T: ?Sized {}
 
+impl<T> PartialEq for NonNullConst<T>
+where
+    T: ?Sized,
+{
+    #[inline]
+    fn eq(&self, other: &Self) -> bool {
+        #[allow(ambiguous_wide_pointer_comparisons)]
+        self.0.eq(&other.0)
+    }
+}
+impl<T> Eq for NonNullConst<T> where T: ?Sized {}
+
+impl<T> PartialOrd for NonNullConst<T>
+where
+    T: ?Sized,
+{
+    #[inline]
+    fn partial_cmp(&self, other: &Self) -> Option<cmp::Ordering> {
+        Some(self.cmp(other))
+    }
+}
+impl<T> Ord for NonNullConst<T>
+where
+    T: ?Sized,
+{
+    #[inline]
+    fn cmp(&self, other: &Self) -> cmp::Ordering {
+        #[allow(ambiguous_wide_pointer_comparisons)]
+        self.0.cmp(&other.0)
+    }
+}
+
+impl<T> hash::Hash for NonNullConst<T>
+where
+    T: ?Sized,
+{
+    #[inline]
+    fn hash<H: hash::Hasher>(&self, state: &mut H) {
+        self.0.hash(state)
+    }
+}
+
+impl<T> From<&T> for NonNullConst<T>
+where
+    T: ?Sized,
+{
+    /// Converts a `&T` to a `NonNullConst<T>`.
+    ///
+    /// This conversion is safe and infallible since references cannot be null.
+    #[inline]
+    fn from(r: &T) -> Self {
+        Self::from_ref(r)
+    }
+}
+
+impl<T> fmt::Debug for NonNullMut<T>
+where
+    T: ?Sized,
+{
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        fmt::Debug::fmt(&self, f)
+    }
+}
+impl<T> fmt::Pointer for NonNullMut<T>
+where
+    T: ?Sized,
+{
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        fmt::Pointer::fmt(&self, f)
+    }
+}
+
 impl<T> Clone for NonNullMut<T>
 where
     T: ?Sized,
@@ -305,6 +384,61 @@ where
     }
 }
 impl<T> Copy for NonNullMut<T> where T: ?Sized {}
+
+impl<T> PartialEq for NonNullMut<T>
+where
+    T: ?Sized,
+{
+    #[inline]
+    fn eq(&self, other: &Self) -> bool {
+        #[allow(ambiguous_wide_pointer_comparisons)]
+        self.0.eq(&other.0)
+    }
+}
+impl<T> Eq for NonNullMut<T> where T: ?Sized {}
+
+impl<T> PartialOrd for NonNullMut<T>
+where
+    T: ?Sized,
+{
+    #[inline]
+    fn partial_cmp(&self, other: &Self) -> Option<cmp::Ordering> {
+        Some(self.cmp(other))
+    }
+}
+impl<T> Ord for NonNullMut<T>
+where
+    T: ?Sized,
+{
+    #[inline]
+    fn cmp(&self, other: &Self) -> cmp::Ordering {
+        #[allow(ambiguous_wide_pointer_comparisons)]
+        self.0.cmp(&other.0)
+    }
+}
+
+impl<T> hash::Hash for NonNullMut<T>
+where
+    T: ?Sized,
+{
+    #[inline]
+    fn hash<H: hash::Hasher>(&self, state: &mut H) {
+        self.0.hash(state)
+    }
+}
+
+impl<T> From<&mut T> for NonNullMut<T>
+where
+    T: ?Sized,
+{
+    /// Converts a `&mut T` to a `NonNullMut<T>`.
+    ///
+    /// This conversion is safe and infallible since references cannot be null.
+    #[inline]
+    fn from(r: &mut T) -> Self {
+        Self::from_mut(r)
+    }
+}
 
 const fn cast_mut<T>(p: *const T) -> *mut T
 where
