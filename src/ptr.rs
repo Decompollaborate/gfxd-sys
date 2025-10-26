@@ -151,6 +151,22 @@ impl NonNullConst<ffi::c_void> {
     }
 }
 
+#[cfg(feature = "std")]
+impl NonNullConst<ffi::c_char> {
+    /// # Safety
+    ///
+    /// The pointer pointed to be `self` must be a valid C string.
+    ///
+    /// Refer to [`CStr::from_ptr`] for details.
+    ///
+    /// [`CStr::from_ptr`]: std::ffi::CStr::from_ptr
+    #[inline]
+    #[must_use]
+    pub unsafe fn as_c_str(&self) -> &std::ffi::CStr {
+        unsafe { std::ffi::CStr::from_ptr(self.as_ptr()) }
+    }
+}
+
 impl<T> NonNullMut<T>
 where
     T: ?Sized,

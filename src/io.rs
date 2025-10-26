@@ -15,7 +15,7 @@
 
 use crate::ffi;
 
-use crate::ptr::NonNullConst;
+use crate::ptr::{NonNullConst, NonNullMut};
 
 #[link(name = "gfxd", kind = "static")]
 extern "C" {
@@ -47,7 +47,7 @@ extern "C" {
 }
 
 pub type gfxd_input_fn_t =
-    unsafe extern "C" fn(buf: *mut ffi::c_void, count: ffi::c_int) -> ffi::c_int;
+    unsafe extern "C" fn(buf: NonNullMut<ffi::c_void>, count: ffi::c_int) -> ffi::c_int;
 
 pub type gfxd_output_fn_t =
-    unsafe extern "C" fn(buf: *const ffi::c_char, count: ffi::c_int) -> ffi::c_int;
+    unsafe extern "C" fn(buf: NonNullConst<ffi::c_char>, count: ffi::c_int) -> ffi::c_int;

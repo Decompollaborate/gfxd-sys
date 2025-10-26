@@ -22,11 +22,11 @@ unsafe fn c_str_from_bytes(bytes: &[u8]) -> NonNullConst<ffi::c_char> {
 fn run_gfxd(dlist_data: &[u8]) -> String {
     let mut out_buf = String::new();
 
-    extern "C" fn output(buf: *const ffi::c_char, count: ffi::c_int) -> ffi::c_int {
+    extern "C" fn output(buf: NonNullConst<ffi::c_char>, count: ffi::c_int) -> ffi::c_int {
         let user_data = unsafe { gfxd_sys::settings::gfxd_udata_get() }.unwrap();
         let out_buf = unsafe { user_data.cast::<String>().as_mut() };
 
-        let data = unsafe { CStr::from_ptr(buf) };
+        let data = unsafe { CStr::from_ptr(buf.as_ptr()) };
 
         out_buf.push_str(&data.to_string_lossy());
 
