@@ -113,8 +113,8 @@ jobs:
           - 'nightly'
     # 1.37 warns about unused-unsafe, which we do want, kinda
     env:
-      RUSTFLAGS: "-D warnings -A unused-unsafe"
-      RUSTDOCFLAGS: "-D warnings -A unused-unsafe"
+      RUSTFLAGS: "-D warnings -A unused-unsafe -A unknown_lints"
+      RUSTDOCFLAGS: "-D warnings -A unused-unsafe -A unknown_lints"
 
     steps:
       - name: Checkout reposistory
@@ -141,8 +141,8 @@ jobs:
           - 'stable'
           - 'nightly'
     env:
-      RUSTFLAGS: "-D warnings -A unused-unsafe"
-      RUSTDOCFLAGS: "-D warnings -A unused-unsafe"
+      RUSTFLAGS: "-D warnings -A unused-unsafe -A unknown_lints"
+      RUSTDOCFLAGS: "-D warnings -A unused-unsafe -A unknown_lints"
 
     steps:
       - name: Checkout reposistory
@@ -162,8 +162,8 @@ jobs:
     name: Check MSRV is correct
     runs-on: ubuntu-latest
     env:
-      RUSTFLAGS: "-D warnings -A unused-unsafe"
-      RUSTDOCFLAGS: "-D warnings -A unused-unsafe"
+      RUSTFLAGS: "-D warnings -A unused-unsafe -A unknown_lints"
+      RUSTDOCFLAGS: "-D warnings -A unused-unsafe -A unknown_lints"
     steps:
       - name: Checkout reposistory
         uses: actions/checkout@main
@@ -180,8 +180,8 @@ jobs:
     name: Check MSRV is correct for all features
     runs-on: ubuntu-latest
     env:
-      RUSTFLAGS: "-D warnings -A unused-unsafe"
-      RUSTDOCFLAGS: "-D warnings -A unused-unsafe"
+      RUSTFLAGS: "-D warnings -A unused-unsafe -A unknown_lints"
+      RUSTDOCFLAGS: "-D warnings -A unused-unsafe -A unknown_lints"
 
     steps:
       - name: Checkout reposistory
