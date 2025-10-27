@@ -101,7 +101,7 @@ extern "C" {
     /// Returns a pointer to the value of the argument with index `arg_num`.
     ///
     /// The value is a union of type `gfxd_value_t`
-    pub fn gfxd_arg_value(arg_num: ffi::c_int) -> Option<NonNullConst<gfxd_value_t>>;
+    pub fn gfxd_arg_value(arg_num: ffi::c_int) -> NonNullConst<gfxd_value_t>;
 
     /// Returns a pointer to the value of the argument that is of `type`, and
     /// has order `idx` in all arguments of that type.
@@ -128,12 +128,12 @@ extern "C" {
     pub fn gfxd_arg_valid(arg_num: ffi::c_int) -> ffi::c_int;
 }
 
-pub const gfxd_argfmt_i: _bindgen_ty_5 = _bindgen_ty_5::gfxd_argfmt_i;
-pub const gfxd_argfmt_u: _bindgen_ty_5 = _bindgen_ty_5::gfxd_argfmt_u;
-pub const gfxd_argfmt_f: _bindgen_ty_5 = _bindgen_ty_5::gfxd_argfmt_f;
+pub const gfxd_argfmt_i: u32 = ArgFmt::gfxd_argfmt_i as u32;
+pub const gfxd_argfmt_u: u32 = ArgFmt::gfxd_argfmt_u as u32;
+pub const gfxd_argfmt_f: u32 = ArgFmt::gfxd_argfmt_f as u32;
 #[repr(u32)]
 #[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
-pub enum _bindgen_ty_5 {
+pub enum ArgFmt {
     gfxd_argfmt_i = 0,
     gfxd_argfmt_u = 1,
     gfxd_argfmt_f = 2,
