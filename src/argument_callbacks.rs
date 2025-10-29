@@ -17,6 +17,8 @@
 //!
 //! [`gfxd_arg_dflt`]: crate::handlers::gfxd_arg_dflt
 
+use core::num::NonZeroU32;
+
 use crate::ffi;
 
 extern "C" {
@@ -240,16 +242,16 @@ pub type gfxd_vp_fn_t = unsafe extern "C" fn(vp: u32) -> ffi::c_int;
 /// The size of the text segment is in `size`.
 ///
 /// [`gfxd_Uctext`]: crate::arg_type::ArgType::gfxd_Uctext
-pub type gfxd_uctext_fn_t = unsafe extern "C" fn(text: u32, size: u32) -> ffi::c_int;
+pub type gfxd_uctext_fn_t = unsafe extern "C" fn(text: u32, size: NonZeroU32) -> ffi::c_int;
 
 /// The argument type is [`gfxd_Ucdata`].
 /// The size of the data segment is in `size`.
 ///
 /// [`gfxd_Ucdata`]: crate::arg_type::ArgType::gfxd_Ucdata
-pub type gfxd_ucdata_fn_t = unsafe extern "C" fn(data: u32, size: u32) -> ffi::c_int;
+pub type gfxd_ucdata_fn_t = unsafe extern "C" fn(data: u32, size: NonZeroU32) -> ffi::c_int;
 
 /// The argument type is [`gfxd_Dram`].
 /// The size of the data is in `size`.
 ///
 /// [`gfxd_Dram`]: crate::arg_type::ArgType::gfxd_Dram
-pub type gfxd_dram_fn_t = unsafe extern "C" fn(dram: u32, size: u32) -> ffi::c_int;
+pub type gfxd_dram_fn_t = unsafe extern "C" fn(dram: u32, size: NonZeroU32) -> ffi::c_int;
