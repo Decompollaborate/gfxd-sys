@@ -25,5 +25,5 @@ pub mod macro_id;
 pub mod macro_info;
 pub mod settings;
 
-pub(crate) mod ffi;
+pub mod ffi;
 pub mod ptr;
