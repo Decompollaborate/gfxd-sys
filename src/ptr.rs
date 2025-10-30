@@ -295,7 +295,8 @@ where
     T: ?Sized,
 {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        fmt::Debug::fmt(&self, f)
+        // Use inner's impl
+        fmt::Debug::fmt(&self.0, f)
     }
 }
 impl<T> fmt::Pointer for NonNullConst<T>
@@ -303,7 +304,8 @@ where
     T: ?Sized,
 {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        fmt::Pointer::fmt(&self, f)
+        // Use inner's impl
+        fmt::Pointer::fmt(&self.0, f)
     }
 }
 
@@ -324,6 +326,7 @@ where
 {
     #[inline]
     fn eq(&self, other: &Self) -> bool {
+        // Use inner's impl
         #[allow(ambiguous_wide_pointer_comparisons)]
         self.0.eq(&other.0)
     }
@@ -345,6 +348,7 @@ where
 {
     #[inline]
     fn cmp(&self, other: &Self) -> cmp::Ordering {
+        // Use inner's impl
         #[allow(ambiguous_wide_pointer_comparisons)]
         self.0.cmp(&other.0)
     }
@@ -356,6 +360,7 @@ where
 {
     #[inline]
     fn hash<H: hash::Hasher>(&self, state: &mut H) {
+        // Use inner's impl
         self.0.hash(state)
     }
 }
@@ -378,7 +383,8 @@ where
     T: ?Sized,
 {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        fmt::Debug::fmt(&self, f)
+        // Use inner's impl
+        fmt::Debug::fmt(&self.0, f)
     }
 }
 impl<T> fmt::Pointer for NonNullMut<T>
@@ -386,7 +392,8 @@ where
     T: ?Sized,
 {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        fmt::Pointer::fmt(&self, f)
+        // Use inner's impl
+        fmt::Pointer::fmt(&self.0, f)
     }
 }
 
@@ -407,6 +414,7 @@ where
 {
     #[inline]
     fn eq(&self, other: &Self) -> bool {
+        // Use inner's impl
         #[allow(ambiguous_wide_pointer_comparisons)]
         self.0.eq(&other.0)
     }
@@ -428,6 +436,7 @@ where
 {
     #[inline]
     fn cmp(&self, other: &Self) -> cmp::Ordering {
+        // Use inner's impl
         #[allow(ambiguous_wide_pointer_comparisons)]
         self.0.cmp(&other.0)
     }
@@ -439,6 +448,7 @@ where
 {
     #[inline]
     fn hash<H: hash::Hasher>(&self, state: &mut H) {
+        // Use inner's impl
         self.0.hash(state)
     }
 }
