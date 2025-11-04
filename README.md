@@ -1,5 +1,13 @@
 # gfxd-sys
 
+[![Latest Version]][crates.io]
+[![Api Rustdoc]][rustdoc]
+
+[Latest Version]: https://img.shields.io/crates/v/gfxd-sys
+[crates.io]: https://crates.io/crates/gfxd-sys
+[Api Rustdoc]: https://img.shields.io/badge/api-rustdoc-blue
+[rustdoc]: https://docs.rs/gfxd-sys
+
 Raw FFI bindings for glankk's [`libgfxd`](https://github.com/glankk/libgfxd) C
 library to be used in Rust.
 
