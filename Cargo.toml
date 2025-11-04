@@ -15,11 +15,9 @@ readme = "README.md"
 keywords = [
     "disassembler",
     "n64",
-    "nintendo",
     "ffi",
     "sys",
     "no_std",
-    "bindings",
 ]
 categories = [
     "parsing",
