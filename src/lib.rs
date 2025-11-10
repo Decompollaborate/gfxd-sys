@@ -13,6 +13,7 @@
 #![allow(non_upper_case_globals)]
 #![deny(improper_ctypes)]
 // #![deny(unsafe_op_in_unsafe_fn)]
+#![deny(clippy::semicolon_if_nothing_returned)]
 
 pub mod arg_type;
 pub mod argument_callbacks;

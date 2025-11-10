@@ -361,7 +361,7 @@ where
     #[inline]
     fn hash<H: hash::Hasher>(&self, state: &mut H) {
         // Use inner's impl
-        self.0.hash(state)
+        self.0.hash(state);
     }
 }
 
@@ -449,7 +449,7 @@ where
     #[inline]
     fn hash<H: hash::Hasher>(&self, state: &mut H) {
         // Use inner's impl
-        self.0.hash(state)
+        self.0.hash(state);
     }
 }
 
