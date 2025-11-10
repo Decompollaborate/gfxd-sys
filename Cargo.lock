@@ -29,7 +29,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
 name = "gfxd-sys"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "cc 1.0.79 (registry+https://github.com/rust-lang/crates.io-index)",
  "libc 0.2.163 (registry+https://github.com/rust-lang/crates.io-index)",

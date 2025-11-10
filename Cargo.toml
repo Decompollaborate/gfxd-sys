@@ -4,7 +4,7 @@
 [package]
 name = "gfxd-sys"
 edition = "2018"
-version = "0.1.0"
+version = "0.1.1"
 authors = [
     "Anghelo Carvajal <angheloalf95@gmail.com>",
 ]
@@ -23,6 +23,7 @@ categories = [
     "parsing",
     "external-ffi-bindings",
     "no-std",
+    "no-std::no-alloc",
 ]
 build = "build.rs"
 links = "gfxd"

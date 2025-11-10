@@ -22,6 +22,9 @@ The current policy is that this may be changed in minor version updates.
 
 ## Cargo features
 
+This crate does not depend on neither Rust's `std` nor `alloc` crates. It does
+depend on Rust's `core` crate.
+
 Currently none of the available features are enabled by default.
 
 - `std`: Turns on `std` (or turn off `no_std`, depending on how you prefer it).

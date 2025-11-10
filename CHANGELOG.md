@@ -7,9 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.1] - 2025-11-04
+
+### Fixed
+
+- Add some missing metadata in the `Cargo.toml` file.
+- Fix some metadata typos.
+
 ## [0.1.0] - 2025-11-04
 
 - Initial release.
 
-[unreleased]: https://github.com/Decompollaborate/gnuv2_demangle/compare/0.1.0...main
-[0.1.0]: https://github.com/Decompollaborate/gnuv2_demangle/releases/tag/0.1.0
+[unreleased]: https://github.com/Decompollaborate/gfxd-sys/compare/0.1.1...HEAD
+[0.1.1]: https://github.com/Decompollaborate/gfxd-sys/compare/0.1.0...0.1.1
+[0.1.0]: https://github.com/Decompollaborate/gfxd-sys/releases/tag/0.1.0
