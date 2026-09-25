@@ -44,7 +44,7 @@ licensed, without any additional terms of conditions.
 ## Versioning and changelog
 
 Currently this crate uses the commit
-[75791ff](https://github.com/glankk/libgfxd/commit/75791ff7c5f09edb1a05b6caede8be004d47eee0)
+[49ec1bb](https://github.com/glankk/libgfxd/commit/49ec1bb893a16b769ddfd0b329d238a658dc0ea2)
 of `libgfxd`.
 
 This library _aims_ to follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).

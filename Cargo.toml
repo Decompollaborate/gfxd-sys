@@ -4,7 +4,7 @@
 [package]
 name = "gfxd-sys"
 edition = "2018"
-version = "0.1.1"
+version = "0.1.2"
 authors = [
     "Anghelo Carvajal <angheloalf95@gmail.com>",
 ]
